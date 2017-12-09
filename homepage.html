@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>MTA Train Stations</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Simple Style -->
+    <style>
+      #map {
+        height: 100vh;
+      }
+    </style>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-3">
+          <div class="row">
+            MTA Train Stations
+          </div>
+          <div class="row">
+            MTA Line Filter
+          </div>
+          <div class="row">
+            [Train Station List]
+          </div>
+        </div>
+        <div class="col-9" id="map">
+        </div>
+          <script>
+            var map;
+            function initMap() {
+              map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 40.7413549, lng: -73.9980243999999},
+                zoom: 15
+              });
+            }
+          </script>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <!-- Load Google Maps API -->
+    <script async defer 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbNKN3TxNljxyB9tnJhxyO4uKhZnuDn2g&callback=initMap">
+   </script>
+  </body>
+</html>
