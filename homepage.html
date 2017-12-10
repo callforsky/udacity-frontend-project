@@ -28,7 +28,9 @@
             MTA Line Filter
           </div>
           <div class="row">
-            [Train Station List]
+            <ul data-bind="foreach: trainStationList">
+              <li data-bind="text: name"></li>
+            </ul>
           </div>
         </div>
         <div class="col-9" id="map">
