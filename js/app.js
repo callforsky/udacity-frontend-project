@@ -7,6 +7,7 @@ var ViewModel = function() {
 	// 'All MTA Line' is actually an option text, returns null value
 	self.selectedLine = ko.observable();
 
+	// display a list of train stations based on filter, show all by default
 	self.trainStationList = ko.computed(()=>{
 		if (this.selectedLine() == 'Harlem Line' || this.selectedLine() == 'Hudson Line') {
 			console.log('get here 1');
@@ -43,6 +44,16 @@ var allTrainStations = [
 		name: 'Cold Spring',
 		line: 'Hudson Line',
 		address: {lat: 41.415259, lng: -73.958101}
+	},
+	{
+		name: 'Irvington',
+		line: 'Hudson Line',
+		address: {lat: 41.040228, lng: -73.873104}
+	},
+	{
+		name: 'Tarrytown',
+		line: 'Hudson Line',
+		address: {lat: 41.076879, lng: -73.864582}
 	}
 ];
 
@@ -52,12 +63,27 @@ var allTrainLines = [
 ];
 
 // Google Map Layout
-var map;
 function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 41.033329, lng: -73.7751039},
-    zoom: 11
-  });
+	var map = new google.maps.Map(document.getElementById('map'), {
+	center: {lat: 41.033329, lng: -73.7751039},
+	zoom: 11
+	});
+
+	// loop over all train stations and display all the markers
+	// for (i = 0; i < allTrainStations.length; i++) {
+	// 	var marker = new google.maps.Marker({
+	// 		position: allTrainStations[i].address,
+	// 		map: map
+	// 	});
+	// };
+
+	// test the on/off of markers
+	for (i = 0; i < allTrainStations.length; i++) {
+		var marker = new google.maps.Marker({
+			position: ViewModel.trainStationList[i].address,
+			map: map
+		});
+	};
 }
 
 
