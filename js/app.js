@@ -2,18 +2,19 @@
 var ViewModel = function() {
 	var self = this;
 
-	self.trainStationList = ko.observableArray([]);
 	self.trainLines = ko.observableArray(allTrainLines);
 	// No line is selected by default
 	self.selectedLine = ko.observable();
 
-	if (this.selectedLine() == 'Harlem Line') {
-		console.log('get here');
-	}
-
-	allTrainStations.filter(station => station.line == this.selectedLine()).forEach(function(element){
-		self.trainStationList.push(new trainStation(element));
-	});
+	self.trainStationList = ko.computed(()=>{
+		if (this.selectedLine() != 'All MTA Lines') {
+			console.log('get here 1');
+			return allTrainStations.filter(station => station.line == this.selectedLine());
+		} else {
+			console.log('get here 2');
+			return allTrainStations();
+		}
+	}, this);
 };
 
 
