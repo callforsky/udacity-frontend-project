@@ -5,14 +5,17 @@ var ViewModel = function() {
 	self.trainStationList = ko.observableArray([]);
 	self.trainLines = ko.observableArray(allTrainLines);
 	// No line is selected by default
-	selectedLine = ko.observable();
+	self.selectedLine = ko.observable();
 
-	if (selectedLine == 'Harlem Line') {
-		allTrainStations.forEach(function(element){
-			self.trainStationList.push(new trainStation(element));
-		});
-	};
+	if (this.selectedLine() == 'Harlem Line') {
+		console.log('get here');
+	}
+
+	allTrainStations.filter(station => station.line == this.selectedLine()).forEach(function(element){
+		self.trainStationList.push(new trainStation(element));
+	});
 };
+
 
 // Train Station Object
 var trainStation = function(data) {
