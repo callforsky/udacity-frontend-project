@@ -25,7 +25,12 @@
             MTA Train Stations
           </div>
           <div class="row">
-            MTA Line Filter
+            <!-- MTA Line Filter -->
+            <select data-bind="options: trainLines,
+                               value: selectedLine,
+                               optionsCaption: '-- Select MTA Line --'"></select>
+            <!-- The line below immediately is used to test if the knockout select list works -->
+            <!-- <span data-bind="text: selectedLine"></span> -->
           </div>
           <div class="row">
             <ul data-bind="foreach: trainStationList">
@@ -35,15 +40,6 @@
         </div>
         <div class="col-9" id="map">
         </div>
-          <script>
-            var map;
-            function initMap() {
-              map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 41.033329, lng: -73.7751039},
-                zoom: 11
-              });
-            }
-          </script>
       </div>
     </div>
 

@@ -1,12 +1,27 @@
-// This is the octopus part
+// ==== This is the octopus (view model) part ===
 var ViewModel = function() {
 	var self = this;
 
-	this.trainStationList = ko.observableArray(allTrainStations);
+	self.trainStationList = ko.observableArray([]);
+	self.trainLines = ko.observableArray(allTrainLines);
+	// No line is selected by default
+	selectedLine = ko.observable();
+
+	if (selectedLine == 'Harlem Line') {
+		allTrainStations.forEach(function(element){
+			self.trainStationList.push(new trainStation(element));
+		});
+	};
 };
 
+// Train Station Object
+var trainStation = function(data) {
+	this.name = ko.observable(data.name);
+	this.line = ko.observable(data.line);
+	this.address = ko.observable(data.address);
+};
 
-// This is the data part
+// === This is the data (model) part ===
 var allTrainStations = [
 	{
 		name : 'White Plains',
@@ -25,10 +40,20 @@ var allTrainStations = [
 	}
 ];
 
-// This is the model part
-var trainStation = function(data) {
-	// var lineFlag = 
-};
+var allTrainLines = [
+	'Harlem Line',
+	'Hudson Line'
+];
+
+// Google Map Layout
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 41.033329, lng: -73.7751039},
+    zoom: 11
+  });
+}
 
 
+// Bind ViewModel to the View (html)
 ko.applyBindings(new ViewModel())
