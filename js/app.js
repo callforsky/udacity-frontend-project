@@ -3,17 +3,19 @@ var ViewModel = function() {
 	var self = this;
 
 	self.trainLines = ko.observableArray(allTrainLines);
-	// No line is selected by default
+	// 'All MTA Line' is selected by default
+	// 'All MTA Line' is actually an option text, returns null value
 	self.selectedLine = ko.observable();
 
 	self.trainStationList = ko.computed(()=>{
-		if (this.selectedLine() != 'All MTA Lines') {
+		if (this.selectedLine() == 'Harlem Line' || this.selectedLine() == 'Hudson Line') {
 			console.log('get here 1');
-			return allTrainStations.filter(station => station.line == this.selectedLine());
+			displayList = allTrainStations.filter(station => station.line == this.selectedLine());
 		} else {
 			console.log('get here 2');
-			return allTrainStations();
+			displayList = allTrainStations;
 		}
+		return displayList;
 	}, this);
 };
 
