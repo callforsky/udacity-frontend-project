@@ -1,6 +1,7 @@
 // ==== This is the octopus (view model) part ===
-var ViewModel = function() {
+function viewModel() {
 	var self = this;
+	var googleMap = map;
 
 	self.trainLines = ko.observableArray(allTrainLines);
 	// 'All MTA Line' is selected by default
@@ -18,6 +19,29 @@ var ViewModel = function() {
 		}
 		return displayList;
 	}, this);
+
+	self.googleMap = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: 41.033329, lng: -73.7751039},
+		zoom: 11
+	});
+
+	// test the on/off of markers
+	// for (i = 0; i < allTrainStations.length; i++) {
+	// 	var marker = new google.maps.Marker({
+	// 		position: ViewModel.trainStationList[i].address,
+	// 		map: map
+	// 	});
+	// };
+
+	// loop over all train stations and display all the markers
+	// for (i = 0; i < allTrainStations.length; i++) {
+	// 	var marker = new google.maps.Marker({
+	// 		position: allTrainStations[i].address,
+	// 		animation: google.maps.Animation.DROP,
+	// 		title: allTrainStations[i].name,
+	// 		map: map
+	// 	});
+	// };
 };
 
 
@@ -63,50 +87,43 @@ var allTrainLines = [
 ];
 
 // Google Map Layout
-function initMap() {
-	var map = new google.maps.Map(document.getElementById('map'), {
-	center: {lat: 41.033329, lng: -73.7751039},
-	zoom: 11
-	});
+// function initMap() {
+// 	var map = new google.maps.Map(document.getElementById('map'), {
+// 	center: {lat: 41.033329, lng: -73.7751039},
+// 	zoom: 11
+// 	});
 
-	// loop over all train stations and display all the markers
-	for (i = 0; i < allTrainStations.length; i++) {
-		var marker = new google.maps.Marker({
-			position: allTrainStations[i].address,
-			animation: google.maps.Animation.DROP,
-			title: allTrainStations[i].name,
-			map: map
-		});
-	};
+	// var largeInfowindow = new google.maps.InfoWindow();
 
-	// Create an on-click event to open an infowindow at each marker
-	var largeInfowindow = new google.maps.InfoWindow();
-	marker.addListener('click', function() {
-		populateInfoWindow(this, largeInfowindow);
-	});
-
-	function populateInfoWindow(marker, infowindow) {
-		// Check if infowindow is opened or not
-		if (infowindow.marker != marker) {
-			infowindow.marker = marker;
-			infowindow.setContent('<div>' + marker.title + '</div>');
-			infowindow.open(map, marker);
-			//  Make sure the marker property is cleared if the infowindow is closed
-			infowindow.addListener('closeclick', function() {
-				infowindow.marker = null;
-			});
-		}
-	}
-
-	// test the on/off of markers
+	// // loop over all train stations and display all the markers
 	// for (i = 0; i < allTrainStations.length; i++) {
 	// 	var marker = new google.maps.Marker({
-	// 		position: ViewModel.trainStationList[i].address,
+	// 		position: allTrainStations[i].address,
+	// 		animation: google.maps.Animation.DROP,
+	// 		title: allTrainStations[i].name,
 	// 		map: map
 	// 	});
+
+	// 	// Create an on-click event to open an infowindow at each marker
+	// 	marker.addListener('click', function() {
+	// 		populateInfoWindow(this, largeInfowindow);
+	// 	});
 	// };
-}
+
+	// function populateInfoWindow(marker, infowindow) {
+	// 	// Check if infowindow is opened or not
+	// 	if (infowindow.marker != marker) {
+	// 		infowindow.marker = marker;
+	// 		infowindow.setContent('<div>' + marker.title + '</div>');
+	// 		infowindow.open(map, marker);
+	// 		//  Make sure the marker property is cleared if the infowindow is closed
+	// 		infowindow.addListener('closeclick', function() {
+	// 			infowindow.marker = null;
+	// 		});
+	// 	}
+	// }
+// }
 
 
 // Bind ViewModel to the View (html)
-ko.applyBindings(new ViewModel())
+ko.applyBindings(new viewModel())
