@@ -70,20 +70,41 @@ function initMap() {
 	});
 
 	// loop over all train stations and display all the markers
-	// for (i = 0; i < allTrainStations.length; i++) {
-	// 	var marker = new google.maps.Marker({
-	// 		position: allTrainStations[i].address,
-	// 		map: map
-	// 	});
-	// };
-
-	// test the on/off of markers
 	for (i = 0; i < allTrainStations.length; i++) {
 		var marker = new google.maps.Marker({
-			position: ViewModel.trainStationList[i].address,
+			position: allTrainStations[i].address,
+			animation: google.maps.Animation.DROP,
+			title: allTrainStations[i].name,
 			map: map
 		});
 	};
+
+	// Create an on-click event to open an infowindow at each marker
+	var largeInfowindow = new google.maps.InfoWindow();
+	marker.addListener('click', function() {
+		populateInfoWindow(this, largeInfowindow);
+	});
+
+	function populateInfoWindow(marker, infowindow) {
+		// Check if infowindow is opened or not
+		if (infowindow.marker != marker) {
+			infowindow.marker = marker;
+			infowindow.setContent('<div>' + marker.title + '</div>');
+			infowindow.open(map, marker);
+			//  Make sure the marker property is cleared if the infowindow is closed
+			infowindow.addListener('closeclick', function() {
+				infowindow.marker = null;
+			});
+		}
+	}
+
+	// test the on/off of markers
+	// for (i = 0; i < allTrainStations.length; i++) {
+	// 	var marker = new google.maps.Marker({
+	// 		position: ViewModel.trainStationList[i].address,
+	// 		map: map
+	// 	});
+	// };
 }
 
 
