@@ -46,7 +46,16 @@ var allTrainLines = [
  		center: {lat: 41.033329, lng: -73.7751039},
  		zoom: 11
  	});
+
+ 	// create a list to take in all the to-be-displayed markers
  	var markers = [];
+
+ 	// Add an event listener to prevent too-close-zoom when there's only one marker
+ 	google.maps.event.addListener(map, 'bounds_changed', function(event) {
+ 		if (this.getZoom() > 15) {
+ 			this.setZoom(15);
+ 		}
+ 	});
 
 	// Bind ViewModel to the View (html)
 	var vm = new viewModel();
@@ -83,6 +92,7 @@ var allTrainLines = [
 
 	var largeInfowindow = new google.maps.InfoWindow();
 
+
 	function addListing(dList) {
 		console.log(dList);
 		// Clear all markers at first, we restart from no markers
@@ -105,6 +115,13 @@ var allTrainLines = [
 	 			populateInfoWindow(this, largeInfowindow);
 	 		});
  		};
+
+		// Fit the map to display all markers
+ 		var bounds = new google.maps.LatLngBounds();
+ 		for (var i = 0; i < markers.length; i++) {
+ 			bounds.extend(markers[i].getPosition());
+ 		}
+ 		map.fitBounds(bounds);
  	}
 
  	// Function to clear all markers, will be called in another function
