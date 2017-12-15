@@ -1,9 +1,9 @@
-// Train Station Object
-var trainStation = function(data) {
-	this.name = ko.observable(data.name);
-	this.line = ko.observable(data.line);
-	this.address = ko.observable(data.address);
-};
+// // Train Station Object
+// var trainStation = function(data) {
+// 	this.name = ko.observable(data.name);
+// 	this.line = ko.observable(data.line);
+// 	this.address = ko.observable(data.address);
+// };
 
 // === This is the data (model) part ===
 var allTrainStations = [
@@ -49,7 +49,9 @@ var allTrainLines = [
  	var markers = [];
 
 	// Bind ViewModel to the View (html)
- 	ko.applyBindings(new viewModel());
+	var vm = new viewModel();
+	console.log(vm);
+ 	ko.applyBindings(vm);
  	function viewModel() {
 		var self = this;
 		// var googleMap = map;
@@ -60,20 +62,26 @@ var allTrainLines = [
 		self.selectedLine = ko.observable();
 
 		// display a list of train stations based on filter, show all by default
-		self.trainStationList = ko.computed(()=>{
-			if (this.selectedLine() == 'Harlem Line' || this.selectedLine() == 'Hudson Line') {
+		self.trainStationList = ko.computed(function(){
+			if (self.selectedLine() == 'Harlem Line' || self.selectedLine() == 'Hudson Line') {
 				console.log('get here 1');
-				displayList = allTrainStations.filter(station => station.line == this.selectedLine());
+				displayList = allTrainStations.filter(station => station.line == self.selectedLine());
 			} else {
 				console.log('get here 2');
 				displayList = allTrainStations;
 			}
 			addListing(displayList);
 			return displayList;
-		}, this);
+		});
+
+		self.selectStation = function (station) {
+			addListing([station]);
+		}
 
 		// self.googleMap = map;
 	};
+
+	var largeInfowindow = new google.maps.InfoWindow();
 
 	function addListing(dList) {
 		console.log(dList);
