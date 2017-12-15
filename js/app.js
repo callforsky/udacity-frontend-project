@@ -100,6 +100,7 @@ var allTrainLines = [
 	 		markers.push(marker);
 	 		//console.log(markers.length);
 	 		// Create an on-click event to open an infowindow at each marker
+	 		// and center to the marker
 	 		marker.addListener('click', function() {
 	 			populateInfoWindow(this, largeInfowindow);
 	 		});
@@ -126,6 +127,8 @@ var allTrainLines = [
 	 			infowindow.marker = null;
 	 		});
 	 	}
+	 	map.setZoom(15);
+	 	map.panTo(marker.getPosition());
  	}
  }
 

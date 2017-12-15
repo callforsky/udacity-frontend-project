@@ -1,3 +1,7 @@
-.qc_ul {
+.station_list {
 	list-style-type: none;
+}
+
+#map {
+height: 100vh;
 }
