@@ -5,3 +5,16 @@
 #map {
 height: 100vh;
 }
+
+.station_list:hover {
+	background-color: yellow;
+}
+
+.station_list:active {
+	color: blue;
+}
+
+.side-bar {
+	background-color: #2C58AD;
+	color: white;
+}

@@ -146,6 +146,6 @@ var allTrainLines = [
 	 	}
 	 	map.setZoom(15);
 	 	map.panTo(marker.getPosition());
- 	}
+ 	};
  }
 
