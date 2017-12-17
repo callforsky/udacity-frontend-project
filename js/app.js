@@ -104,7 +104,8 @@ var allTrainLines = [
 	 			position: position,
 	 			animation: google.maps.Animation.DROP,
 	 			title: allTrainStations[i].name,
-	 			map: map
+	 			map: map,
+	 			id: i
 	 		});
 	 		console.log(marker);
 	 		// Push the marker to our array of markers
@@ -146,16 +147,22 @@ var allTrainLines = [
 	 			map.setZoom(10);
 	 		});
 	 		var streetViewService = new google.maps.StreetViewService();
-	 		var radius = 50;
+	 		var radius = 100;
+	 		var infoWindowContent = '<div><h6>' + marker.title + ' Train Station</h6></div>';
 	 		// In case the status is OK, which means the pano was found, compute the
 	 		// position of the streetview image, then calculate the heading, then get a
 	 		// panorama from that and set the options
 	 		function getStreetView(data, status) {
+	 			// infowindow.setContent(infoWindowContent)
 	 			if (status == google.maps.StreetViewStatus.OK) {
+	 				// var infoWindowContent = '<div><h6>' + marker.title + ' Train Station</h6></div>';
+	 				infoWindowContent += '<div id="pano" style="width:300px;height:300px;"></div>'
+	 				infowindow.setContent(infoWindowContent)
 	 				var nearStreetViewLocation = data.location.latLng;
 	 				var heading = google.maps.geometry.spherical.computeHeading(
 	 					nearStreetViewLocation, marker.position);
-		 			infowindow.setContent('<div><h6>' + marker.title + ' Train Station </h6></div><div id="pano" style="width:300px;height:300px;"></div>');
+		 			// infowindow.setContent('<div><h6>' + marker.title + ' Train Station </h6></div><div id="pano" style="width:300px;height:300px;"></div>');
+	 				// infowindow.setContent(infoWindowContent)
 	 				var panoramaOptions = {
 	 					position: nearStreetViewLocation,
 	 					pov: {
@@ -165,14 +172,33 @@ var allTrainLines = [
 	 				};
 	 				var panorama = new google.maps.StreetViewPanorama(
 	 					document.getElementById('pano'), panoramaOptions);
+	 				
+	 				
 	 			} else {
 	 				infowindow.setContent('<div>' + marker.title + '</div>' +
 	 					'<div>No Street View Found</div>');
+	 				infowwindow.setContent(infoWindowContent)
 	 			}
 	 		}
+
+	 		// Add Address to Infowindow
+	 		var service = new google.maps.places.PlacesService(map);
+	 		service.getDetails({placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'}, function(place, status) {
+	 			if (status === google.maps.places.PlacesServiceStatus.OK) {
+	 				infoWindowContent += '<div>' + place.formatted_address + '</div>'
+	 				infowindow.setContent(infoWindowContent)
+	 				console.log("get here 3")
+	 			} else {
+	 				infoWindowContent += '<br><div>No Address Found</div>';
+	 				infowindow.setContent(infoWindowContent)
+	 			}
+	 		})
+
 	 		// Use streetview service to get the closest streetview image within
-	 		// 50 meters of the markers position
+	 		// 100 meters of the markers position
 	 		streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+	 		// streetViewService.getPanorama(marker.position, radius);
+	 		// infowindow.setContent(infoWindowContent);
 	 		// Open the infowindow on the correct marker
 	 		infowindow.open(map, marker);
 	 		// infowindow.setContent('<div><strong>' + marker.title + '</strong><br>' + '</div>' +
