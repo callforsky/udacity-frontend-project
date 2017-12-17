@@ -10,7 +10,7 @@ var allTrainStations = [
 	{
 		name : 'White Plains',
 		line : 'Harlem Line',
-		address : {lat: 41.035453, lng: -73.774714}
+		address : {lat: 41.034394, lng: -73.775009}
 	},
 	{
 		name: 'North White Plains',
@@ -99,8 +99,9 @@ var allTrainLines = [
 		clearMarkers();
 		// Loop over the displayList to put the markers on map
 		for (var i = 0; i < dList.length; i++) {
+			var position = dList[i].address;
 	 		var marker = new google.maps.Marker({
-	 			position: dList[i].address,
+	 			position: position,
 	 			animation: google.maps.Animation.DROP,
 	 			title: allTrainStations[i].name,
 	 			map: map
@@ -133,16 +134,55 @@ var allTrainLines = [
  	}
 
  	// Function to populate the info window when a marker is clicked
+ 	// The infowindow has the title and street view
  	function populateInfoWindow(marker, infowindow) {
  	// Check if infowindow is opened or not
 	 	if (infowindow.marker != marker) {
+	 		infowindow.setContent('');
 	 		infowindow.marker = marker;
-	 		infowindow.setContent('<div>' + marker.title + '</div>');
-	 		infowindow.open(map, marker);
-	 		//  Make sure the marker property is cleared if the infowindow is closed
+	 		// Make sure the marker property is cleared if the infowwindow is closed
 	 		infowindow.addListener('closeclick', function() {
 	 			infowindow.marker = null;
+	 			map.setZoom(10);
 	 		});
+	 		var streetViewService = new google.maps.StreetViewService();
+	 		var radius = 50;
+	 		// In case the status is OK, which means the pano was found, compute the
+	 		// position of the streetview image, then calculate the heading, then get a
+	 		// panorama from that and set the options
+	 		function getStreetView(data, status) {
+	 			if (status == google.maps.StreetViewStatus.OK) {
+	 				var nearStreetViewLocation = data.location.latLng;
+	 				var heading = google.maps.geometry.spherical.computeHeading(
+	 					nearStreetViewLocation, marker.position);
+		 			infowindow.setContent('<div><h6>' + marker.title + ' Train Station </h6></div><div id="pano" style="width:300px;height:300px;"></div>');
+	 				var panoramaOptions = {
+	 					position: nearStreetViewLocation,
+	 					pov: {
+	 						heading: heading,
+	 						pitch: 30
+	 					}
+	 				};
+	 				var panorama = new google.maps.StreetViewPanorama(
+	 					document.getElementById('pano'), panoramaOptions);
+	 			} else {
+	 				infowindow.setContent('<div>' + marker.title + '</div>' +
+	 					'<div>No Street View Found</div>');
+	 			}
+	 		}
+	 		// Use streetview service to get the closest streetview image within
+	 		// 50 meters of the markers position
+	 		streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+	 		// Open the infowindow on the correct marker
+	 		infowindow.open(map, marker);
+	 		// infowindow.setContent('<div><strong>' + marker.title + '</strong><br>' + '</div>' +
+	 		// 	'<div id="pano"></div');
+	 		// infowindow.open(map, marker);
+	 		// //  Make sure the marker property is cleared if the infowindow is closed
+	 		// infowindow.addListener('closeclick', function() {
+	 		// 	infowindow.marker = null;
+	 		// 	map.setZoom(10);
+	 		// });
 	 	}
 	 	map.setZoom(15);
 	 	map.panTo(marker.getPosition());
