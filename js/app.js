@@ -39,6 +39,8 @@ var allTrainLines = [
 	'Hudson Line'
 ];
 
+var placeIds = []
+
  // ==== This is the octopus (view model) part ===
  // Google Map Layout
  function initMap() {
@@ -59,7 +61,6 @@ var allTrainLines = [
 
 	// Bind ViewModel to the View (html)
 	var vm = new viewModel();
-	console.log(vm);
  	ko.applyBindings(vm);
  	function viewModel() {
 		var self = this;
@@ -92,22 +93,46 @@ var allTrainLines = [
 
 	var largeInfowindow = new google.maps.InfoWindow();
 
+	var geocoder = new google.maps.Geocoder;
+ 	for (var i = 0; i < allTrainStations.length; i++){
+ 		var position = allTrainStations[i].address;
+		geocoder.geocode({'location': position}, function(results, status) {
+			if (status === google.maps.GeocoderStatus.OK) {
+				if (results[1]) {
+					placeIds.push({id: results[1].place_id});
+					console.log(placeIds)
+				}
+			}
+		});
+	};
+
 
 	function addListing(dList) {
-		console.log(dList);
+		console.log('well' + placeIds);
 		// Clear all markers at first, we restart from no markers
 		clearMarkers();
+		// var geocoder = new google.maps.Geocoder;
 		// Loop over the displayList to put the markers on map
 		for (var i = 0; i < dList.length; i++) {
+			// var geocoder = new google.maps.Geocoder;
+			// geocoder.geocode({'location': position}, function(results, status) {
+			// 	if (status === google.maps.GeocoderStatus.OK) {
+			// 		if (results[1]) {
+			// 			placeIds.push(results[1].place_id);
+			// 			console.log(placeIds)
+			// 		}
+			// 	}
+			// });
+			console.log('get here??');
 			var position = dList[i].address;
 	 		var marker = new google.maps.Marker({
 	 			position: position,
 	 			animation: google.maps.Animation.DROP,
 	 			title: allTrainStations[i].name,
-	 			map: map,
-	 			id: i
+	 			// id: placeIds[i],
+	 			map: map
 	 		});
-	 		console.log(marker);
+	 		// console.log(marker.title, placeIds[i])
 	 		// Push the marker to our array of markers
 	 		markers.push(marker);
 	 		//console.log(markers.length);
@@ -125,6 +150,23 @@ var allTrainLines = [
  		}
  		map.fitBounds(bounds);
  	}
+
+ 	// Find place Id for each station in dList
+ 	// function findPlaceId(dList) {
+ 	// 	var geocoder = new google.maps.Geocoder;
+ 	// 	for (var i = 0; i < markers.length; i++){
+ 	// 		geocoder.geocode({'location': position}, function(results, status) {
+		// 		if (status === google.maps.GeocoderStatus.OK) {
+		// 			if (results[1]) {
+		// 				placeIds.push(results[1].place_id);
+		// 				console.log(placeIds)
+		// 			}
+		// 		}
+		// 	});
+		// 	console.log('get here?');
+		// 	var position = dList[i].address;			
+ 	// 	};
+ 	// };
 
  	// Function to clear all markers, will be called in another function
  	function clearMarkers () {
@@ -148,21 +190,35 @@ var allTrainLines = [
 	 		});
 	 		var streetViewService = new google.maps.StreetViewService();
 	 		var radius = 100;
-	 		var infoWindowContent = '<div><h6>' + marker.title + ' Train Station</h6></div>';
+	 		var infoContent = '<div><h6>' + marker.title + ' Train Station</h6></div>' +
+	 			'<div id="pano" style="width:300px;height:300px;"></div>';
 	 		// In case the status is OK, which means the pano was found, compute the
 	 		// position of the streetview image, then calculate the heading, then get a
 	 		// panorama from that and set the options
-	 		function getStreetView(data, status) {
-	 			// infowindow.setContent(infoWindowContent)
+	 		var placeId = '';
+	 		// var geocoder = new google.maps.Geocoder;
+				// geocoder.geocode({'location': marker.position}, function(results, status) {
+				// 	if (status === google.maps.GeocoderStatus.OK) {
+				// 		if (results[1]) {
+				// 			placeId = results[1].place_id;
+				// 			addFormattedAddress(placeId);
+				// 		}
+				// 	}
+	 		// });
+
+	 		// below function handles the callback from streetViewService
+	 		function getStreetViewAndDetail(data, status) {
+	 			console.log('get here 4')
+	 			// infowindow.setContent(infoContent)
 	 			if (status == google.maps.StreetViewStatus.OK) {
-	 				// var infoWindowContent = '<div><h6>' + marker.title + ' Train Station</h6></div>';
-	 				infoWindowContent += '<div id="pano" style="width:300px;height:300px;"></div>'
-	 				infowindow.setContent(infoWindowContent)
+	 				// var infoContent = '<div><h6>' + marker.title + ' Train Station</h6></div>';
+	 				// infoContent += '<br><div id="pano" style="width:300px;height:300px;"></div>'
+	 				console.log(infoContent);
 	 				var nearStreetViewLocation = data.location.latLng;
 	 				var heading = google.maps.geometry.spherical.computeHeading(
 	 					nearStreetViewLocation, marker.position);
 		 			// infowindow.setContent('<div><h6>' + marker.title + ' Train Station </h6></div><div id="pano" style="width:300px;height:300px;"></div>');
-	 				// infowindow.setContent(infoWindowContent)
+	 				infowindow.setContent(infoContent)
 	 				var panoramaOptions = {
 	 					position: nearStreetViewLocation,
 	 					pov: {
@@ -170,45 +226,87 @@ var allTrainLines = [
 	 						pitch: 30
 	 					}
 	 				};
-	 				var panorama = new google.maps.StreetViewPanorama(
-	 					document.getElementById('pano'), panoramaOptions);
+	 				console.log('get here 6');
+	 				// var panorama = new google.maps.StreetViewPanorama(
+	 				// 	document.getElementById('pano'), panoramaOptions);
 	 				
-	 				
+	 				var geocoder = new google.maps.Geocoder;
+	 				geocoder.geocode({'location': marker.position}, function(results, status) {
+	 					if (status === google.maps.GeocoderStatus.OK) {
+	 						if (results[1]) {
+	 							placeId = results[1].place_id;
+	 							addFormattedAddress(infoContent, placeId);
+	 							// panorama.setVisible(true);
+	 							// streetViewService.getPanoramaByLocation(marker.position, radius, getStreetViewAndDetail);
+	 						}
+	 					}
+	 				});
 	 			} else {
 	 				infowindow.setContent('<div>' + marker.title + '</div>' +
 	 					'<div>No Street View Found</div>');
-	 				infowwindow.setContent(infoWindowContent)
+	 			// infowindow.setContent('fuck2', infoContent)
 	 			}
+	 			// streetViewService.getPanoramaByLocation(marker.position, radius, getStreetViewAndDetail);
 	 		}
 
+
+	 		// var geocoder = new google.maps.Geocoder;
+	 		// console.log('attention' + marker.position)
+	 		// geocoder.geocode({'location': marker.position}, function(results, status) {
+	 		// 	if (status === google.maps.GeocoderStatus.OK) {
+	 		// 		if (results[1]) {
+	 		// 			marker['id'] = results[1].place_id;
+	 		// 			console.log(marker.id)
+	 		// 		}
+	 		// 	}
+	 		// })
+	 		// for (var i = 0; i < markers.length; i++){
+	 		// 	geocoder.geocode({'location': position}, function(results, status) {
+				// 	if (status === google.maps.GeocoderStatus.OK) {
+				// 		if (results[1]) {
+				// 			placeIds.push(results[1].place_id);
+				// 			console.log(placeIds)
+				// 		}
+				// 	}
+				// });
+				// console.log('get here?');
+				// var position = dList[i].address;			
+	 		// };
+
 	 		// Add Address to Infowindow
-	 		var service = new google.maps.places.PlacesService(map);
-	 		service.getDetails({placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'}, function(place, status) {
-	 			if (status === google.maps.places.PlacesServiceStatus.OK) {
-	 				infoWindowContent += '<div>' + place.formatted_address + '</div>'
-	 				infowindow.setContent(infoWindowContent)
-	 				console.log("get here 3")
-	 			} else {
-	 				infoWindowContent += '<br><div>No Address Found</div>';
-	 				infowindow.setContent(infoWindowContent)
-	 			}
-	 		})
+	 		function addFormattedAddress(infoContent, placeId) {
+		 		var service = new google.maps.places.PlacesService(map);
+		 		service.getDetails({'placeId': placeId}, function(place, status) {
+		 			if (status === google.maps.places.PlacesServiceStatus.OK) {
+		 				infoContent += '<br><div>' + place.formatted_address + '</div>'
+		 				console.log(infoContent);
+		 				infowindow.setContent(infoContent);
+		 				// streetViewService.getPanoramaByLocation(marker.position, radius, getStreetViewAndDetail);
+		 				console.log(infoContent);
+		 			} else {
+		 				infoContent += '<br><div>No Address Found</div>';
+		 				infowindow.setContent(infoContent);
+		 			}
+		 		});
+	 		};
 
 	 		// Use streetview service to get the closest streetview image within
 	 		// 100 meters of the markers position
-	 		streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+	 		console.log('get here 5');
+	 		streetViewService.getPanoramaByLocation(marker.position, radius, getStreetViewAndDetail);
 	 		// streetViewService.getPanorama(marker.position, radius);
-	 		// infowindow.setContent(infoWindowContent);
+	 		// infowindow.setContent(infoContent);
 	 		// Open the infowindow on the correct marker
-	 		infowindow.open(map, marker);
+	 		// infowindow.open(map, marker);
 	 		// infowindow.setContent('<div><strong>' + marker.title + '</strong><br>' + '</div>' +
 	 		// 	'<div id="pano"></div');
-	 		// infowindow.open(map, marker);
+	 		infowindow.open(map, marker);
 	 		// //  Make sure the marker property is cleared if the infowindow is closed
 	 		// infowindow.addListener('closeclick', function() {
 	 		// 	infowindow.marker = null;
 	 		// 	map.setZoom(10);
 	 		// });
+	 		console.log('fuck', infoContent);
 	 	}
 	 	map.setZoom(15);
 	 	map.panTo(marker.getPosition());
