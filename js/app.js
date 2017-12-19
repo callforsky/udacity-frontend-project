@@ -180,6 +180,8 @@ var placeIds = []
  	// The infowindow has the title and street view
  	function populateInfoWindow(marker, infowindow) {
  	// Check if infowindow is opened or not
+ 		var infoContent = '<div><h6>' + marker.title + ' Train Station</h6></div>' +
+	 			'<div id="pano" style="width:300px;height:300px;"></div>';
 	 	if (infowindow.marker != marker) {
 	 		infowindow.setContent('');
 	 		infowindow.marker = marker;
@@ -190,8 +192,8 @@ var placeIds = []
 	 		});
 	 		var streetViewService = new google.maps.StreetViewService();
 	 		var radius = 100;
-	 		var infoContent = '<div><h6>' + marker.title + ' Train Station</h6></div>' +
-	 			'<div id="pano" style="width:300px;height:300px;"></div>';
+	 		// var infoContent = '<div><h6>' + marker.title + ' Train Station</h6></div>' +
+	 		// 	'<div id="pano" style="width:300px;height:300px;"></div>';
 	 		// In case the status is OK, which means the pano was found, compute the
 	 		// position of the streetview image, then calculate the heading, then get a
 	 		// panorama from that and set the options
@@ -236,6 +238,7 @@ var placeIds = []
 	 						if (results[1]) {
 	 							placeId = results[1].place_id;
 	 							addFormattedAddress(infoContent, placeId);
+	 							console.log('get here 8');
 	 							// panorama.setVisible(true);
 	 							// streetViewService.getPanoramaByLocation(marker.position, radius, getStreetViewAndDetail);
 	 						}
@@ -275,6 +278,7 @@ var placeIds = []
 
 	 		// Add Address to Infowindow
 	 		function addFormattedAddress(infoContent, placeId) {
+	 			console.log('get here 7');
 		 		var service = new google.maps.places.PlacesService(map);
 		 		service.getDetails({'placeId': placeId}, function(place, status) {
 		 			if (status === google.maps.places.PlacesServiceStatus.OK) {
