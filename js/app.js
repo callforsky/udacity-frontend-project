@@ -310,7 +310,7 @@ var placeIds = []
 	 		// 	infowindow.marker = null;
 	 		// 	map.setZoom(10);
 	 		// });
-	 		console.log('fuck', infoContent);
+	 		console.log('check', infoContent);
 	 	}
 	 	map.setZoom(15);
 	 	map.panTo(marker.getPosition());
