@@ -369,7 +369,7 @@ var allTrainStations = [
 	{
 		name: 'Fordham',
 		line: 'Harlem Line',
-		address: {lat:40.863124, lng: -73.901085}
+		address: {lat: 40.862017, lng: -73.890550}
 	},
 	{
 		name: 'Tremont',
