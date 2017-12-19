@@ -5,39 +5,6 @@
 // 	this.address = ko.observable(data.address);
 // };
 
-// === This is the data (model) part ===
-var allTrainStations = [
-	{
-		name : 'White Plains',
-		line : 'Harlem Line',
-		address : {lat: 41.034394, lng: -73.775009}
-	},
-	{
-		name: 'North White Plains',
-		line : 'Harlem Line',
-		address: {lat: 41.051315, lng: -73.772475}
-	},
-	{
-		name: 'Cold Spring',
-		line: 'Hudson Line',
-		address: {lat: 41.415259, lng: -73.958101}
-	},
-	{
-		name: 'Irvington',
-		line: 'Hudson Line',
-		address: {lat: 41.040228, lng: -73.873104}
-	},
-	{
-		name: 'Tarrytown',
-		line: 'Hudson Line',
-		address: {lat: 41.076879, lng: -73.864582}
-	}
-];
-
-var allTrainLines = [
-	'Harlem Line',
-	'Hudson Line'
-];
 
 var placeIds = []
 
@@ -317,3 +284,116 @@ var placeIds = []
  	};
  }
 
+// === This is the data (model) part ===
+var allTrainStations = [
+	{
+		name : 'White Plains',
+		line : 'Harlem Line',
+		address : {lat: 41.034394, lng: -73.775009}
+	},
+	{
+		name: 'North White Plains',
+		line : 'Harlem Line',
+		address: {lat: 41.051315, lng: -73.772475}
+	},
+	{
+		name: 'Cold Spring',
+		line: 'Hudson Line',
+		address: {lat: 41.415259, lng: -73.958101}
+	},
+	{
+		name: 'Irvington',
+		line: 'Hudson Line',
+		address: {lat: 41.040228, lng: -73.873104}
+	},
+	{
+		name: 'Tarrytown',
+		line: 'Hudson Line',
+		address: {lat: 41.076879, lng: -73.864582}
+	},
+	{
+		name: 'Hartsdale',
+		line: 'Harlem Line',
+		address: {lat: 41.011370, lng: -73.795767}
+	},
+	{
+		name: 'Scarsdale',
+		line: 'Harlem Line',
+		address: {lat: 40.990204, lng: -73.808159}
+	},
+	{
+		name: 'Crestwood',
+		line: 'Harlem Line',
+		address: {lat: 40.959248, lng: -73.820596}
+	},
+	{
+		name: 'Tuckahoe',
+		line: 'Harlem Line',
+		address: {lat: 40.951034, lng: -73.828534}
+	},
+	{
+		name: 'Bronxville',
+		line: 'Harlem Line',
+		address: {lat: 40.941487, lng: -73.835148}
+	},
+	{
+		name: 'Fleetwood',
+		line: 'Harlem Line',
+		address: {lat: 40.927992, lng: -73.839786}
+	},
+	{
+		name: 'Mt Vernon West',
+		line: 'Harlem Line',
+		address: {lat: 40.911857, lng: -73.851410}
+	},
+	{
+		name: 'Wakefield',
+		line: 'Harlem Line',
+		address: {lat: 40.907373, lng: -73.855304}
+	},
+	{
+		name: 'Woodlawn',
+		line: 'Harlem Line',
+		address: {lat: 40.895679, lng: -73.862894}
+	},
+	{
+		name: 'Williams Bridge',
+		line: 'Harlem Line',
+		address: {lat: 40.878279, lng: -73.871023}
+	},
+	{
+		name: 'Botanical Garden',
+		line: 'Harlem Line',
+		address: {lat: 40.866790, lng: -73.883077}
+	},
+	{
+		name: 'Fordham',
+		line: 'Harlem Line',
+		address: {lat:40.863124, lng: -73.901085}
+	},
+	{
+		name: 'Tremont',
+		line: 'Harlem Line',
+		address: {lat: 40.847427, lng: -73.899704}
+	},
+	{
+		name: 'Melrose',
+		line: 'Harlem Line',
+		address: {lat: 40.825935, lng: -73.915232}
+	},
+	{
+		name: 'Harlem - 125 Street',
+		line: 'Harlem Line',
+		address: {lat: 40.805425, lng: -73.939181}
+	},
+	{
+		name: 'Grand Central',
+		line: 'Harlem Line',
+		address: {lat: 40.752962, lng: -73.977208}
+	}
+];
+
+var allTrainLines = [
+	'Harlem Line',
+	'Hudson Line'
+];
