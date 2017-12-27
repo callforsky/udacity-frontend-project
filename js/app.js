@@ -277,7 +277,18 @@ var placeIds = []
 	 		// 	infowindow.marker = null;
 	 		// 	map.setZoom(10);
 	 		// });
-	 		console.log('check', infoContent);
+	 		var panoramaOptions = {
+	 			position: marker.position,
+	 			pov: {
+	 				heading: 34,
+	 				pitch: 10,
+	 				zoom: 1
+	 			}
+	 		};
+	 		google.maps.event.addListener(infowindow, 'domready', function() {
+	 			var panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
+	 			map.setStreetView(panorama);
+	 		});
 	 	}
 	 	map.setZoom(15);
 	 	map.panTo(marker.getPosition());
