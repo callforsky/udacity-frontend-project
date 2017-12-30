@@ -13,7 +13,8 @@ var placeIds = []
  function initMap() {
  	var map = new google.maps.Map(document.getElementById('map'), {
  		center: {lat: 41.033329, lng: -73.7751039},
- 		zoom: 11
+ 		zoom: 11,
+ 		streetViewControl: false,
  	});
 
  	// create a list to take in all the to-be-displayed markers
