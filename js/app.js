@@ -59,7 +59,7 @@ var placeIds = []
 			self.selectedLine(null);
 		};
 
-	};
+	}
 
 	var largeInfowindow = new google.maps.InfoWindow();
 
@@ -292,7 +292,7 @@ var placeIds = []
 	 	}
 	 	map.setZoom(15);
 	 	map.panTo(marker.getPosition());
- 	};
+ 	}
  }
 
 // === This is the data (model) part ===
