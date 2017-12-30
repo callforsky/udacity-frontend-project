@@ -402,6 +402,106 @@ var allTrainStations = [
 		name: 'Grand Central',
 		line: 'Harlem Line',
 		address: {lat: 40.752962, lng: -73.977208}
+	},
+	{
+		name: 'Valhalla',
+		line: 'Harlem Line',
+		address: {lat: 41.073086, lng: -73.772578}
+	},
+	{
+		name: 'Mt.Pleasant',
+		line: 'Harlem Line',
+		address: {lat: 41.095083, lng: -73.793614}
+	},
+	{
+		name: 'Hawthorne',
+		line: 'Harlem Line',
+		address: {lat: 41.111332, lng: -73.795932}
+	},
+	{
+		name: 'Pleasantville',
+		line: 'Harlem Line',
+		address: {lat: 41.135089, lng: -73.792205}
+	},
+	{
+		name: 'Chappaqua',
+		line: 'Harlem Line',
+		address: {lat: 41.158273, lng: -73.774885}
+	},
+	{
+		name: 'Mount Kisco',
+		line: 'Harlem Line',
+		address: {lat: 41.208701, lng: -73.729597}
+	},
+	{
+		name: 'Bedford Hills',
+		line: 'Harlem Line',
+		address: {lat: 41.237582, lng: -73.699947}
+	},
+	{
+		name: 'Katonah',
+		line: 'Harlem Line',
+		address: {lat: 41.259794, lng: -73.684166}
+	},
+	{
+		name: 'Goldens Bridges',
+		line: 'Harlem Line',
+		address: {lat: 41.294747, lng: -73.677625}
+	},
+	{
+		name: "Purdy's",
+		line: 'Harlem Line',
+		address: {lat: 41.325811, lng: -73.659034}
+	},
+	{
+		name: 'Croton Falls',
+		line: 'Harlem Line',
+		address: {lat: 41.347980, lng: -73.662258}
+	},
+	{
+		name: 'Brewster',
+		line: 'Harlem Line',
+		address: {lat: 41.394970, lng: -73.619815}
+	},
+	{
+		name: 'Southeast',
+		line: 'Harlem Line',
+		address: {lat: 41.413211, lng: -73.623035}
+	},
+	{
+		name: 'Patterson',
+		line: 'Harlem Line',
+		address: {lat: 41.512100, lng: -73.604563}
+	},
+	{
+		name: 'Pawling',
+		line: 'Harlem Line',
+		address: {lat: 41.564478, lng: -73.600513}
+	},
+	{
+		name: 'Appalachian Trail',
+		line: 'Harlem Line',
+		address: {lat: 41.611051, lng: -73.578678}
+	},
+	{
+		name: 'Harlem Valley-Wingdale',
+		line: 'Harlem Line',
+		address: {lat: 41.637732, lng: -73.571577}
+	},
+	{
+		name: 'Dover Plains',
+		line: 'Harlem Line',
+		address: {lat: 41.742939, lng: -73.576172}
+	},
+	{
+		name: 'Tenmile River',
+		line: 'Harlem Line',
+		address: {lat: 41.780202, lng: -73.558204}
+	},
+	{
+		name: 'Wassaic',
+		line: 'Harlem Line',
+		address: {lat: 41.815096, lng: -73.562362}
 	}
 ];
 
