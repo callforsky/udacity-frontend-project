@@ -28,8 +28,7 @@ var placeIds = []
  	});
 
 	// Bind ViewModel to the View (html)
-	var vm = new viewModel();
- 	ko.applyBindings(vm);
+ 	ko.applyBindings(new viewModel());
  	function viewModel() {
 		var self = this;
 		// var googleMap = map;
@@ -399,8 +398,18 @@ var allTrainStations = [
 		address: {lat: 40.805425, lng: -73.939181}
 	},
 	{
+		name: 'Harlem - 125 Street',
+		line: 'Hudson Line',
+		address: {lat: 40.805425, lng: -73.939181}
+	},
+	{
 		name: 'Grand Central',
 		line: 'Harlem Line',
+		address: {lat: 40.752962, lng: -73.977208}
+	},
+	{
+		name: 'Grand Central',
+		line: 'Hudson Line',
 		address: {lat: 40.752962, lng: -73.977208}
 	},
 	{
