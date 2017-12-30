@@ -54,9 +54,12 @@ var placeIds = []
 
 		self.selectStation = function (station) {
 			addListing([station]);
-		}
+		};
 
-		// self.googleMap = map;
+		self.resetSelection = function () {
+			self.selectedLine(null);
+		};
+
 	};
 
 	var largeInfowindow = new google.maps.InfoWindow();
@@ -76,7 +79,6 @@ var placeIds = []
 
 
 	function addListing(dList) {
-		console.log('well' + placeIds);
 		// Clear all markers at first, we restart from no markers
 		clearMarkers();
 		// var geocoder = new google.maps.Geocoder;
@@ -91,13 +93,11 @@ var placeIds = []
 			// 		}
 			// 	}
 			// });
-			console.log('get here??');
 			var position = dList[i].address;
 	 		var marker = new google.maps.Marker({
 	 			position: position,
 	 			animation: google.maps.Animation.DROP,
-	 			title: allTrainStations[i].name,
-	 			// id: placeIds[i],
+	 			title: dList[i].name,
 	 			map: map
 	 		});
 	 		// console.log(marker.title, placeIds[i])
