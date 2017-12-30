@@ -153,8 +153,8 @@
 	 		// Use streetview service to get the closest streetview image within
 	 		// 100 meters of the markers position
 	 		streetViewService.getPanoramaByLocation(marker.position, radius, handleError);
-	 		// Open the infowindow on the correct marker
-	 		infowindow.open(map, marker);
+
+	 		// set the panorama options at first to save space later
 	 		var panoramaOptions = {
 	 			position: marker.position,
 	 			pov: {
@@ -163,13 +163,21 @@
 	 				zoom: 1
 	 			}
 	 		};
+	 		// Dom ready means that all the HTML has been received and parsed by the browser
+	 		// into the DOM tree which can now be manipulated
+	 		// it occurs BEFORE the page has been fully rendered (as external resources may have not yet fully downloaded)
 	 		google.maps.event.addListener(infowindow, 'domready', function() {
 	 			var panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
 	 			map.setStreetView(panorama);
 	 		});
+
+	 		// Open the infowindow on the correct marker
+	 		infowindow.open(map, marker);
 	 	}
+	 	// adjust the map position relative to the marker to display all the info window
 	 	map.setZoom(15);
 	 	map.panTo(marker.getPosition());
+	 	map.panBy(0, -150)
  	}
  }
 
