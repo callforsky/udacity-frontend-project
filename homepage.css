@@ -20,6 +20,10 @@ height: 100vh;
 .side-bar {
 	background-color: #2C58AD;
 	color: white;
+	overflow: scroll;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	height: 100vh;
 }
 
 h2.big_title {
