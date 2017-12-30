@@ -502,7 +502,137 @@ var allTrainStations = [
 		name: 'Wassaic',
 		line: 'Harlem Line',
 		address: {lat: 41.815096, lng: -73.562362}
-	}
+	},
+	{
+		name: 'Yankees',
+		line: 'Hudson Line',
+		address: {lat: 40.825881, lng: -73.930238}
+	},
+	{
+		name: 'Morris Heights',
+		line: 'Hudson Line',
+		address: {lat: 40.854055, lng: -73.920138}
+	},
+	{
+		name: 'University Heights',
+		line: 'Hudson Line',
+		address: {lat: 40.862204, lng: -73.913420}
+	},
+	{
+		name: 'Marble Hill',
+		line: 'Hudson Line',
+		address: {lat: 40.875033, lng: -73.912069}
+	},
+	{
+		name: 'Spuyten Duyvil',
+		line: 'Hudson Line',
+		address: {lat: 40.879155, lng: -73.922127}
+	},
+	{
+		name: 'Riverdale',
+		line: 'Hudson Line',
+		address: {lat: 40.904240, lng: -73.914190}
+	},
+	{
+		name: 'Ludlow',
+		line: 'Hudson Line',
+		address: {lat: 40.924389, lng: -73.904957}
+	},
+	{
+		name: 'Yonkers',
+		line: 'Hudson Line',
+		address: {lat: 40.935806, lng: -73.902402}
+	},
+	{
+		name: 'Glenwood',
+		line: 'Hudson Line',
+		address: {lat: 40.950804, lng: -73.899083}
+	},
+	{
+		name: 'Greystone',
+		line: 'Hudson Line',
+		address: {lat: 40.972826, lng: -73.889300}
+	},
+	{
+		name: 'Hastings-on-Hudson',
+		line: 'Hudson Line',
+		address: {lat: 40.994991, lng: -73.884227}
+	},
+	{
+		name: 'Dobbs Ferry',
+		line: 'Hudson Line',
+		address: {lat: 41.012573, lng: -73.879649}
+	},
+	{
+		name: 'Ardsley-on-Hudson',
+		line: 'Hudson Line',
+		address: {lat: 41.026457, lng: -73.876554}
+	},
+	{
+		name: 'Irvington',
+		line: 'Hudson Line',
+		address: {lat: 41.040236, lng: -73.873158}
+	},
+	{
+		name: 'Philipse Manor',
+		line: 'Hudson Line',
+		address: {lat: 41.095179, lng: -73.869809}
+	},
+	{
+		name: 'Scarborough',
+		line: 'Hudson Line',
+		address: {lat: 41.138813, lng: -73.866485}
+	},
+	{
+		name: 'Ossining',
+		line: 'Hudson Line',
+		address: {lat: 41.158473, lng: -73.869116}
+	},
+	{
+		name: 'Croton-Harmon',
+		line: 'Hudson Line',
+		address: {lat: 41.190104, lng: -73.882619}
+	},
+	{
+		name: 'Cortlandt',
+		line: 'Hudson Line',
+		address: {lat: 41.246761, lng: -73.922618}
+	},
+	{
+		name: 'Peekskill',
+		line: 'Hudson Line',
+		address: {lat: 41.285306, lng: -73.930899}
+	},
+	{
+		name: 'Manitou',
+		line: 'Hudson Line',
+		address: {lat: 41.332867, lng: -73.970494}
+	},
+	{
+		name: 'Garrison',
+		line: 'Hudson Line',
+		address: {lat: 41.382021, lng: -73.947256}
+	},
+	{
+		name: 'Breakneck Ridge',
+		line: 'Hudson Line',
+		address: {lat: 41.450430, lng: -73.982438}
+	},
+	{
+		name: 'Beacon',
+		line: 'Hudson Line',
+		address: {lat: 41.538065, lng: -73.983989}
+	},
+	{
+		name: 'New Hamburg',
+		line: 'Hudson Line',
+		address: {lat: 41.587016, lng: -73.947492}
+	},
+	{
+		name: 'Poughkeepsie',
+		line: 'Hudson Line',
+		address: {lat: 41.716944, lng: -73.939847}
+	},
 ];
 
 var allTrainLines = [
