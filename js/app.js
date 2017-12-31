@@ -1,208 +1,3 @@
- // ==== This is the octopus (view model) part ===
- // initiate a Google Map Layout
- function initMap() {
- 	var map = new google.maps.Map(document.getElementById('map'), {
- 		center: {lat: 41.033329, lng: -73.7751039},
- 		zoom: 11,
- 		streetViewControl: false,
- 	});
-
- 	// create a blank list to take in all the to-be-displayed markers
- 	var markers = [];
-
- 	// add an event listener to prevent too-close-zoom when there's only one marker
- 	google.maps.event.addListener(map, 'bounds_changed', function(event) {
- 		if (this.getZoom() > 15) {
- 			this.setZoom(15);
- 		}
- 	});
-
-	// bind ViewModel to the View (html)
- 	ko.applyBindings(new viewModel());
-
- 	// create the View Model
- 	function viewModel() {
-		var self = this;
-
-		// use knockoutjs to listen on current available train lines
-		// if a new train line added in allTrainLines in Data model, it will be updated automatically
-		// through knockoutjs
-		self.trainLines = ko.observableArray(allTrainLines);
-		// 'All MTA Line' is selected by default
-		// 'All MTA Line' is actually an option text, returns null value
-		self.selectedLine = ko.observable();
-
-		// display a list of train stations based on filter, show all by default
-		self.trainStationList = ko.computed(function(){
-			if (self.selectedLine() == 'Harlem Line' || self.selectedLine() == 'Hudson Line') {
-				displayList = allTrainStations.filter(station => station.line[0] == self.selectedLine() || station.line[1] == self.selectedLine());
-			} else {
-				displayList = allTrainStations;
-			}
-			putMarkers(displayList);
-			return displayList;
-		});
-
-		self.selectStation = function (station) {
-			putMarkers([station]);
-		};
-
-		self.resetSelection = function () {
-			self.selectedLine(null);
-		};
-
-	}
-
-	// create the info window object from google map api library
-	var largeInfowindow = new google.maps.InfoWindow();
-
-	// retrieve news from NYT about MTA and put them on the info bar at the right side
-	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-	url += '?' + $.param({
-	  'api-key': "7734f8ba387f4a81abb8b82ff661e32a",
-	  'sort': "newest",
-	  'q': "metro-north-railroad"
-	});
-	$.ajax({
-	  url: url,
-	  method: 'GET',
-	}).done(function(result) {
-	  console.log(result);
-	  articles = result.response.docs;
-	  console.log(articles);
-	  for (var i = 0; i < articles.length; i++) {
-	  	var article = articles[i];
-	  	$('#nytimes-articles').append('<li class="article">'+'<a class="news-title" href="'+article.web_url+'">'+article.headline.main+'</a>'+
-	  			'<p class="news-date">Published Date: '+article.pub_date.substring(0,10)+'</p>'+
-				'<p class="news-brief">'+article.snippet+'</p>'+'</li>');
-	  }
-	}).fail(function(err) {
-	  throw err;
-	});
-
-	// take in the current selected train station list and label them on the map
-	function putMarkers(dList) {
-		// Clear all markers at first, we restart from no markers
-		clearMarkers();
-		// Loop over the displayList to put the markers on map
-		for (var i = 0; i < dList.length; i++) {
-			var position = dList[i].address;
-	 		var marker = new google.maps.Marker({
-	 			position: position,
-	 			animation: google.maps.Animation.DROP,
-	 			title: dList[i].name,
-	 			map: map
-	 		});
-	 		// Push the marker to our array of markers
-	 		markers.push(marker);
-	 		// Create an on-click event to open an infowindow at each marker
-	 		// and center to the marker
-	 		marker.addListener('click', function() {
-	 			populateInfoWindow(this, largeInfowindow);
-	 		});
- 		};
-
-		// Fit the map to display all markers
- 		var bounds = new google.maps.LatLngBounds();
- 		for (var i = 0; i < markers.length; i++) {
- 			bounds.extend(markers[i].getPosition());
- 		}
- 		map.fitBounds(bounds);
- 	}
-
- 	// Function to clear all markers, will be called in another function
- 	function clearMarkers () {
- 		for (var i = 0 ; i < markers.length; i ++) {
- 			markers[i].setMap(null);
- 		}
- 		markers = [];
- 	}
-
- 	// Function to populate the info window when a marker is clicked
- 	// The infowindow has the title and street view
- 	function populateInfoWindow(marker, infowindow) {
- 	// Check if infowindow is opened or not
- 		var infoContent = '<div><h6>' + marker.title + ' Train Station</h6></div>' +
-	 			'<div id="pano" style="width:300px;height:300px;"></div>';
-	 	if (infowindow.marker != marker) {
-	 		infowindow.setContent('');
-	 		infowindow.marker = marker;
-	 		// Make sure the marker property is cleared if the infowwindow is closed
-	 		infowindow.addListener('closeclick', function() {
-	 			infowindow.marker = null;
-	 			map.setZoom(10);
-	 		});
-	 		var streetViewService = new google.maps.StreetViewService();
-	 		// find the closest panorama within 100 meters
-	 		var radius = 100;
-
-	 		// handles the error message in the callback from streetViewService
-	 		function handleError(data, status) {
-	 			if (status != google.maps.StreetViewStatus.OK) {
-	 				infowindow.setContent('<div>' + marker.title + '</div>' +
-	 					'<div>No Street View Found</div>');
-	 			}
-	 		}
-
-	 		// create the geo decoder object from google map api library
-			// step 1, translate translate lattitude and longitude to unique place ids, push place ids to placeIds list
-			// step 2, look up place ids in google map api library
-			// step 3, find the formatted address
-			var geocoder = new google.maps.Geocoder;
-	 		geocoder.geocode({'location': marker.position}, function(results, status) {
- 				if (status === google.maps.GeocoderStatus.OK) {
-					if (results[1]) {
-						placeId = results[1].place_id;
-						addFormattedAddress(infoContent, placeId);
-					}
- 				}
-	 		});
-
-	 		// add formatted address to Infowindow
-	 		function addFormattedAddress(infoContent, placeId) {
-		 		var service = new google.maps.places.PlacesService(map);
-		 		service.getDetails({'placeId': placeId}, function(place, status) {
-		 			if (status === google.maps.places.PlacesServiceStatus.OK) {
-		 				infoContent += '<br><div>' + place.formatted_address + '</div>'
-		 				infowindow.setContent(infoContent);
-		 			} else {
-		 				infoContent += '<br><div>No Address Found</div>';
-		 				infowindow.setContent(infoContent);
-		 			}
-		 		});
-	 		};
-
-	 		// Use streetview service to get the closest streetview image within
-	 		// 100 meters of the markers position
-	 		streetViewService.getPanoramaByLocation(marker.position, radius, handleError);
-
-	 		// set the panorama options at first to save space later
-	 		var panoramaOptions = {
-	 			position: marker.position,
-	 			pov: {
-	 				heading: 34,
-	 				pitch: 10,
-	 				zoom: 1
-	 			}
-	 		};
-	 		// Dom ready means that all the HTML has been received and parsed by the browser
-	 		// into the DOM tree which can now be manipulated
-	 		// it occurs BEFORE the page has been fully rendered (as external resources may have not yet fully downloaded)
-	 		google.maps.event.addListener(infowindow, 'domready', function() {
-	 			var panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
-	 			map.setStreetView(panorama);
-	 		});
-
-	 		// Open the infowindow on the correct marker
-	 		infowindow.open(map, marker);
-	 	}
-	 	// adjust the map position relative to the marker to display all the info window
-	 	map.setZoom(15);
-	 	map.panTo(marker.getPosition());
-	 	map.panBy(0, -150)
- 	}
- }
-
 // === This is the data (model) part ===
 var allTrainStations = [
 	{
@@ -305,21 +100,11 @@ var allTrainStations = [
 		line: ['Harlem Line', 'Hudson Line'],
 		address: {lat: 40.805425, lng: -73.939181}
 	},
-	// {
-	// 	name: 'Harlem - 125 Street',
-	// 	line: 'Hudson Line',
-	// 	address: {lat: 40.805425, lng: -73.939181}
-	// },
 	{
 		name: 'Grand Central',
 		line: ['Harlem Line', 'Hudson Line'],
 		address: {lat: 40.752962, lng: -73.977208}
 	},
-	// {
-	// 	name: 'Grand Central',
-	// 	line: ['Hudson Line'],
-	// 	address: {lat: 40.752962, lng: -73.977208}
-	// },
 	{
 		name: 'Valhalla',
 		line: ['Harlem Line'],
@@ -556,3 +341,215 @@ var allTrainLines = [
 	'Harlem Line',
 	'Hudson Line'
 ];
+
+// ==== This is the octopus (view model) part ===
+// bind ViewModel to the View (html)
+ko.applyBindings(new viewModel());
+
+// create the View Model
+function viewModel() {
+	var self = this;
+
+	// use knockoutjs to listen on current available train lines
+	// if a new train line added in allTrainLines in Data model, it will be updated automatically
+	// through knockoutjs
+	self.trainLines = ko.observableArray(allTrainLines);
+	// 'All MTA Line' is selected by default
+	// 'All MTA Line' is actually an option text, returns null value
+	self.selectedLine = ko.observable();
+
+	// display a list of train stations based on filter, show all by default
+	self.trainStationList = ko.computed(function(){
+		if (self.selectedLine() == 'Harlem Line' || self.selectedLine() == 'Hudson Line') {
+			displayList = allTrainStations.filter(station => station.line[0] == self.selectedLine() || station.line[1] == self.selectedLine());
+		} else {
+			displayList = allTrainStations;
+		}
+		// putMarkers(displayList);
+
+		return displayList;
+		console.log(displayList)
+	});
+
+	self.selectStation = function (station) {
+		// putMarkers([station]);
+	};
+
+	self.resetSelection = function () {
+		self.selectedLine(null);
+	};
+
+}
+
+// initiate a Google Map Layout
+function initMap() {
+	var map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: 41.033329, lng: -73.7751039},
+		zoom: 11,
+		streetViewControl: false,
+	});
+
+	// create a blank list to take in all the to-be-displayed markers
+	var markers = [];
+
+	// add an event listener to prevent too-close-zoom when there's only one marker
+	google.maps.event.addListener(map, 'bounds_changed', function(event) {
+		if (this.getZoom() > 15) {
+			this.setZoom(15);
+		}
+	});
+
+
+
+	// create the info window object from google map api library
+	var largeInfowindow = new google.maps.InfoWindow();
+
+	// retrieve news from NYT about MTA and put them on the info bar at the right side
+	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+	url += '?' + $.param({
+	  'api-key': "7734f8ba387f4a81abb8b82ff661e32a",
+	  'sort': "newest",
+	  'q': "metro-north-railroad"
+	});
+	$.ajax({
+	  url: url,
+	  method: 'GET',
+	}).done(function(result) {
+	  console.log(result);
+	  articles = result.response.docs;
+	  console.log(articles);
+	  for (var i = 0; i < articles.length; i++) {
+	  	var article = articles[i];
+	  	$('#nytimes-articles').append('<li class="article">'+'<a class="news-title" href="'+article.web_url+'">'+article.headline.main+'</a>'+
+	  			'<p class="news-date">Published Date: '+article.pub_date.substring(0,10)+'</p>'+
+				'<p class="news-brief">'+article.snippet+'</p>'+'</li>');
+	  }
+	}).fail(function(err) {
+	  throw err;
+	});
+
+	// take in the current selected train station list and label them on the map
+	function putMarkers(dList) {
+		// Clear all markers at first, we restart from no markers
+		clearMarkers();
+		// Loop over the displayList to put the markers on map
+		for (var i = 0; i < dList.length; i++) {
+			var position = dList[i].address;
+	 		var marker = new google.maps.Marker({
+	 			position: position,
+	 			animation: google.maps.Animation.DROP,
+	 			title: dList[i].name,
+	 			map: map
+	 		});
+	 		// Push the marker to our array of markers
+	 		markers.push(marker);
+	 		// Create an on-click event to open an infowindow at each marker
+	 		// and center to the marker
+	 		marker.addListener('click', function() {
+	 			populateInfoWindow(this, largeInfowindow);
+	 		});
+ 		};
+
+		// Fit the map to display all markers
+ 		var bounds = new google.maps.LatLngBounds();
+ 		for (var i = 0; i < markers.length; i++) {
+ 			bounds.extend(markers[i].getPosition());
+ 		}
+ 		map.fitBounds(bounds);
+ 	}
+
+ 	// Function to clear all markers, will be called in another function
+ 	function clearMarkers () {
+ 		for (var i = 0 ; i < markers.length; i ++) {
+ 			markers[i].setMap(null);
+ 		}
+ 		markers = [];
+ 	}
+
+ 	// Function to populate the info window when a marker is clicked
+ 	// The infowindow has the title and street view
+ 	function populateInfoWindow(marker, infowindow) {
+ 	// Check if infowindow is opened or not
+ 		var infoContent = '<div><h6>' + marker.title + ' Train Station</h6></div>' +
+	 			'<div id="pano" style="width:300px;height:300px;"></div>';
+	 	if (infowindow.marker != marker) {
+	 		infowindow.setContent('');
+	 		infowindow.marker = marker;
+	 		// Make sure the marker property is cleared if the infowwindow is closed
+	 		infowindow.addListener('closeclick', function() {
+	 			infowindow.marker = null;
+	 			map.setZoom(10);
+	 		});
+	 		var streetViewService = new google.maps.StreetViewService();
+	 		// find the closest panorama within 100 meters
+	 		var radius = 100;
+
+	 		// handles the error message in the callback from streetViewService
+	 		function handleError(data, status) {
+	 			if (status != google.maps.StreetViewStatus.OK) {
+	 				infowindow.setContent('<div>' + marker.title + '</div>' +
+	 					'<div>No Street View Found</div>');
+	 			}
+	 		}
+
+	 		// create the geo decoder object from google map api library
+			// step 1, translate translate lattitude and longitude to unique place ids, push place ids to placeIds list
+			// step 2, look up place ids in google map api library
+			// step 3, find the formatted address
+			var geocoder = new google.maps.Geocoder;
+	 		geocoder.geocode({'location': marker.position}, function(results, status) {
+ 				if (status === google.maps.GeocoderStatus.OK) {
+					if (results[1]) {
+						placeId = results[1].place_id;
+						addFormattedAddress(infoContent, placeId);
+					}
+ 				}
+	 		});
+
+	 		// add formatted address to Infowindow
+	 		function addFormattedAddress(infoContent, placeId) {
+		 		var service = new google.maps.places.PlacesService(map);
+		 		service.getDetails({'placeId': placeId}, function(place, status) {
+		 			if (status === google.maps.places.PlacesServiceStatus.OK) {
+		 				infoContent += '<br><div>' + place.formatted_address + '</div>'
+		 				infowindow.setContent(infoContent);
+		 			} else {
+		 				infoContent += '<br><div>No Address Found</div>';
+		 				infowindow.setContent(infoContent);
+		 			}
+		 		});
+	 		};
+
+	 		// Use streetview service to get the closest streetview image within
+	 		// 100 meters of the markers position
+	 		streetViewService.getPanoramaByLocation(marker.position, radius, handleError);
+
+	 		// set the panorama options at first to save space later
+	 		var panoramaOptions = {
+	 			position: marker.position,
+	 			pov: {
+	 				heading: 34,
+	 				pitch: 10,
+	 				zoom: 1
+	 			}
+	 		};
+	 		// Dom ready means that all the HTML has been received and parsed by the browser
+	 		// into the DOM tree which can now be manipulated
+	 		// it occurs BEFORE the page has been fully rendered (as external resources may have not yet fully downloaded)
+	 		google.maps.event.addListener(infowindow, 'domready', function() {
+	 			var panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
+	 			map.setStreetView(panorama);
+	 		});
+
+	 		// Open the infowindow on the correct marker
+	 		infowindow.open(map, marker);
+	 	}
+	 	// adjust the map position relative to the marker to display all the info window
+	 	map.setZoom(15);
+	 	map.panTo(marker.getPosition());
+	 	map.panBy(0, -150)
+ 	}
+ }
+
+
+
