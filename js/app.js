@@ -380,12 +380,14 @@ function viewModel() {
 				markers[i].setVisible(true);
 			}
 		}
-		// markers = [];
 		console.log(station.name);
 	};
 
 	self.resetSelection = function () {
 		self.selectedLine(null);
+		 for (var i = 0 ; i < markers.length; i ++) {
+ 			markers[i].setVisible(true);
+ 		}
 	};
 
 }
