@@ -13,6 +13,6 @@ This webpage uses *Bootstrap* to construct a responsive and mobile-friendly fron
 
 ## TO-DO
 
-1.Deploy this application to a true website through Heroku
-2.Add MTA lines until all is added
-3.Add a sidebar to the right to give more information like parking and nearby amenities
+1. Deploy this application to a true website through Heroku
+2. Add MTA lines until all is added
+3. Add a sidebar to the right to give more information like parking and nearby amenities
