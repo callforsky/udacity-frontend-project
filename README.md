@@ -7,7 +7,7 @@ This is a single webpage that lists all train stations in two MTA lines, Harlem 
 
 ## Application Design
 
-This webpage uses *Bootstrap* to construct a responsive and mobile-friendly frond-end surface. Application follows MVM pattern by using *Knockout JS* observables to update DOM automatically. *Google Map API* and *Holder* are utilized and all data requests to them are retrieved in an asynchronous manner. Error handling logic is embedded to handle any failure of APIs.
+This webpage uses **Bootstrap** to construct a responsive and mobile-friendly frond-end surface. Application follows MVM pattern by using **Knockout JS** observables to update DOM automatically. **Google Map API** and **Holder** are utilized and all data requests to them are retrieved in an asynchronous manner. Error handling logic is embedded to handle any failure of APIs.
 
 
 
