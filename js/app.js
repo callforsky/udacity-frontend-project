@@ -361,18 +361,27 @@ function viewModel() {
 	// display a list of train stations based on filter, show all by default
 	self.trainStationList = ko.computed(function(){
 		if (self.selectedLine() == 'Harlem Line' || self.selectedLine() == 'Hudson Line') {
-			displayList = allTrainStations.filter(station => station.line[0] == self.selectedLine() || station.line[1] == self.selectedLine());
+			selectedStations = allTrainStations.filter(station => station.line[0] == self.selectedLine() || station.line[1] == self.selectedLine());
 		} else {
-			displayList = allTrainStations;
+			selectedStations = allTrainStations;
 		}
-		// putMarkers(displayList);
 
-		return displayList;
-		console.log(displayList)
+		// putMarkers(selectedStations);
+		// console.log(selectedStations)
+		return selectedStations;
 	});
 
-	self.selectStation = function (station) {
-		// putMarkers([station]);
+	self.oneStation = function (station) {
+		for (var i = 0 ; i < markers.length; i ++) {
+			console.log(markers[i])
+			if (markers[i].getTitle() != station.name) {
+				markers[i].setVisible(false);
+			} else {
+				markers[i].setVisible(true);
+			}
+		}
+		// markers = [];
+		console.log(station.name);
 	};
 
 	self.resetSelection = function () {
@@ -380,6 +389,9 @@ function viewModel() {
 	};
 
 }
+
+// create a blank list to take in all the to-be-displayed markers
+var markers = [];
 
 // initiate a Google Map Layout
 function initMap() {
@@ -389,17 +401,12 @@ function initMap() {
 		streetViewControl: false,
 	});
 
-	// create a blank list to take in all the to-be-displayed markers
-	var markers = [];
-
 	// add an event listener to prevent too-close-zoom when there's only one marker
 	google.maps.event.addListener(map, 'bounds_changed', function(event) {
 		if (this.getZoom() > 15) {
 			this.setZoom(15);
 		}
 	});
-
-
 
 	// create the info window object from google map api library
 	var largeInfowindow = new google.maps.InfoWindow();
@@ -428,40 +435,69 @@ function initMap() {
 	  throw err;
 	});
 
-	// take in the current selected train station list and label them on the map
-	function putMarkers(dList) {
-		// Clear all markers at first, we restart from no markers
-		clearMarkers();
-		// Loop over the displayList to put the markers on map
-		for (var i = 0; i < dList.length; i++) {
-			var position = dList[i].address;
-	 		var marker = new google.maps.Marker({
-	 			position: position,
-	 			animation: google.maps.Animation.DROP,
-	 			title: dList[i].name,
-	 			map: map
-	 		});
-	 		// Push the marker to our array of markers
-	 		markers.push(marker);
-	 		// Create an on-click event to open an infowindow at each marker
-	 		// and center to the marker
-	 		marker.addListener('click', function() {
-	 			populateInfoWindow(this, largeInfowindow);
-	 		});
- 		};
+	// // take in the current selected train station list and label them on the map
+	// function putMarkers(dList) {
+	// 	// Clear all markers at first, we restart from no markers
+	// 	clearMarkers();
+	// 	// Loop over the selectedStations to put the markers on map
+	// 	for (var i = 0; i < dList.length; i++) {
+	// 		var position = dList[i].address;
+	//  		var marker = new google.maps.Marker({
+	//  			position: position,
+	//  			animation: google.maps.Animation.DROP,
+	//  			title: dList[i].name,
+	//  			map: map
+	//  		});
+	//  		// Push the marker to our array of markers
+	//  		markers.push(marker);
+	//  		// Create an on-click event to open an infowindow at each marker
+	//  		// and center to the marker
+	//  		marker.addListener('click', function() {
+	//  			populateInfoWindow(this, largeInfowindow);
+	//  		});
+ // 		};
 
-		// Fit the map to display all markers
- 		var bounds = new google.maps.LatLngBounds();
- 		for (var i = 0; i < markers.length; i++) {
- 			bounds.extend(markers[i].getPosition());
- 		}
- 		map.fitBounds(bounds);
+	// 	// Fit the map to display all markers
+ // 		var bounds = new google.maps.LatLngBounds();
+ // 		for (var i = 0; i < markers.length; i++) {
+ // 			bounds.extend(markers[i].getPosition());
+ // 		}
+ // 		map.fitBounds(bounds);
+ // 	}
+
+ 	// Clear all markers at first, we restart from no markers
+ 	clearMarkers();
+ 	// loop over all train stations to put the markers on map
+ 	// have another function to turn on/off the markers instead of recreating them repeatedly
+ 	for (var i = 0; i < allTrainStations.length; i++) {
+ 		var position = allTrainStations[i].address;
+ 		var marker = new google.maps.Marker({
+ 			position: position,
+ 			animation: google.maps.Animation.DROP,
+ 			title: allTrainStations[i].name,
+ 			map: map
+ 		});
+ 		// Push the marker to our array of markers
+ 		markers.push(marker);
+ 		// console.log(markers[i].getTitle());
+ 		// Create an on-click event to open an infowindow at each marker
+	 	// and center to the marker
+ 		marker.addListener('click', function(){
+ 			populateInfoWindow(this, largeInfowindow);
+ 		});
  	}
+
+	// Fit the map to display all markers
+	var bounds = new google.maps.LatLngBounds();
+	for (var i = 0; i < markers.length; i++) {
+		bounds.extend(markers[i].getPosition());
+	}
+	map.fitBounds(bounds);
 
  	// Function to clear all markers, will be called in another function
  	function clearMarkers () {
  		for (var i = 0 ; i < markers.length; i ++) {
- 			markers[i].setMap(null);
+ 			markers[i].setVisible(false);
  		}
  		markers = [];
  	}
