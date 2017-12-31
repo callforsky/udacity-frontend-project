@@ -49,3 +49,40 @@ h2.big_title {
 .station_list {
 	padding-left: 0.8em;
 }
+
+.news_title {
+	color: white;
+	margin: 0.4em;
+	margin-left: 0em;
+}
+
+.article {
+	list-style-type: none;
+}
+
+.article-list {
+	padding-left: 0.1em;
+}
+
+.news-title {
+	color: white;
+	font-weight: bolder;
+}
+
+.news-title:hover {
+	color: yellow;
+}
+
+.news-brief {
+	font-size: 80%;
+}
+
+.news-date {
+	font-size: 60%;
+	margin: 0;
+	text-align: left;
+}
+
+.news-divider {
+	margin: 0.1em;
+}
