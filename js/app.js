@@ -378,6 +378,7 @@ function viewModel() {
 		return selectedStations;
 	});
 
+	// function that listens and respond when a specific station is clicked in the left side bar
 	self.oneStation = function (station) {
 		if (largeInfowindow) {
 			largeInfowindow.close();
@@ -398,6 +399,7 @@ function viewModel() {
 		getNews(nytKeyWords);
 	};
 
+	// function that listens the reset button on the left side bar
 	self.resetSelection = function () {
 		self.selectedLine(null);
 		for (var i = 0; i < markers.length; i++) {
@@ -412,6 +414,7 @@ function viewModel() {
 
 }
 
+// show only stations on the selected train lines, all stations are shown by default
 function showHideMarkersByLine(selectedLine) {
 	for (var i = 0; i < markers.length; i++) {
 		if (markers[i].line == selectedLine || selectedLine === undefined) {
@@ -422,7 +425,7 @@ function showHideMarkersByLine(selectedLine) {
 	};
 }
 
-
+// retrieve news from New York Times
 function getNews(nytKeyWords) {
 	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 	url += '?' + $.param({
@@ -497,7 +500,6 @@ function initMap() {
 
  		// Push the marker to our array of markers
  		markers.push(marker);
- 		// console.log(markers[i].getTitle());
  		// Create an on-click event to open an infowindow at each marker
 	 	// and center to the marker
  		marker.addListener('click', function(){
@@ -601,6 +603,3 @@ function initMap() {
 	 	map.panBy(0, -150)
  	}
  }
-
-
-
