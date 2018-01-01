@@ -422,7 +422,8 @@ function getNews(nytKeyWords) {
 				'<p class="news-brief">'+article.snippet+'</p>'+'</li>');
 		}
 	}).fail(function(err) {
-		throw err;
+		$('#nytimes-articles').html("");
+		$('#nytimes-articles').text("NYT news could not be loaded, please try another station or retry later.");
 	});
 }
 
@@ -442,30 +443,7 @@ function initMap() {
 	// create the info window object from google map api library
 	window.largeInfowindow = new google.maps.InfoWindow();
 
-	// retrieve news from NYT about MTA and put them on the info bar at the right side
-	// var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-	// url += '?' + $.param({
-	//   'api-key': "7734f8ba387f4a81abb8b82ff661e32a",
-	//   'sort': "newest",
-	//   'q': "metro-north-railroad"
-	// });
-	// $.ajax({
-	//   url: url,
-	//   method: 'GET',
-	// }).done(function(result) {
-	//   console.log(result);
-	//   articles = result.response.docs;
-	//   console.log(articles);
-	//   for (var i = 0; i < articles.length; i++) {
-	//   	var article = articles[i];
-	//   	$('#nytimes-articles').append('<li class="article">'+'<a class="news-title" href="'+article.web_url+'">'+article.headline.main+'</a>'+
-	//   			'<p class="news-date">Published Date: '+article.pub_date.substring(0,10)+'</p>'+
-	// 			'<p class="news-brief">'+article.snippet+'</p>'+'</li>');
-	//   }
-	// }).fail(function(err) {
-	//   throw err;
-	// });
-
+	// Get all MTA related news by default
 	getNews('metro north railroad');
 
  	// Function to clear all markers, will be called in another function
@@ -519,6 +497,8 @@ function initMap() {
 	 			infowindow.marker = null;
 	 			map.setZoom(10);
 	 		});
+
+	 		// Define a new street view service object
 	 		var streetViewService = new google.maps.StreetViewService();
 	 		// find the closest panorama within 100 meters
 	 		var radius = 100;
@@ -542,6 +522,8 @@ function initMap() {
 						placeId = results[1].place_id;
 						addFormattedAddress(infoContent, placeId);
 					}
+ 				} else {
+ 					window.alert("Error was: " + status);
  				}
 	 		});
 
