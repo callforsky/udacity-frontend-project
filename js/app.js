@@ -443,6 +443,10 @@ function getNews(nytKeyWords) {
 	});
 }
 
+// Google Map API Error Handling
+function mapError() {
+	alert("Google Map could not be loaded at this moment. Please notify the developer through GitHub and he will fix it as soon as possible.")
+}
 
 // initiate a Google Map Layout
 function initMap() {
