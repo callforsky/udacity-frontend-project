@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-[This](https://htmlpreview.github.io/?https://github.com/callforsky/udacity-frontend-project/blob/master/homepage.html) is a single webpage that lists all train stations in two MTA lines, Harlem and Hudson. Users can filter the train stations by lines and can view the Google Street View of a train station by clicking the marker. This page is still under development to add more features in the future.
+[This](https://htmlpreview.github.io/?https://github.com/callforsky/udacity-frontend-project/blob/master/homepage.html) is a single webpage that lists all train stations in Harlem and Hudson railroads. Users can filter the train stations by lines and can view the Google Street View of a train station by clicking the marker. This page is still under development to add more features in the future.
 
 
 ## Build
