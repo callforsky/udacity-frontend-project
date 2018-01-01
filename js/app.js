@@ -344,6 +344,8 @@ var allTrainLines = [
 
 // ==== This is the octopus (view model) part ===
 
+// create a blank list to take in all the to-be-displayed markers
+var markers = [];
 
 // bind ViewModel to the View (html)
 ko.applyBindings(new viewModel());
@@ -364,8 +366,10 @@ function viewModel() {
 	self.trainStationList = ko.computed(function(){
 		if (self.selectedLine() == 'Harlem Line' || self.selectedLine() == 'Hudson Line') {
 			selectedStations = allTrainStations.filter(station => station.line[0] == self.selectedLine() || station.line[1] == self.selectedLine());
+			showHideMarkersByLine(self.selectedLine())
 		} else {
 			selectedStations = allTrainStations;
+			showHideMarkersByLine(self.selectedLine())
 		}
 		return selectedStations;
 	});
@@ -374,7 +378,8 @@ function viewModel() {
 		if (largeInfowindow) {
 			largeInfowindow.close();
 		};
-		for (var i = 0 ; i < markers.length; i ++) {
+		// hide all other markers to focus on the selected station
+		for (var i = 0; i < markers.length; i++) {
 			if (markers[i].getTitle() != station.name) {
 				markers[i].setVisible(false);
 			} else {
@@ -383,13 +388,14 @@ function viewModel() {
 				markers[i].setAnimation(google.maps.Animation.DROP);
 			}
 		};
+		// get the NYT news for the selected station
 		var nytKeyWords = 'metro north train ' + station.name;
 		getNews(nytKeyWords);
 	};
 
 	self.resetSelection = function () {
 		self.selectedLine(null);
-		for (var i = 0 ; i < markers.length; i ++) {
+		for (var i = 0; i < markers.length; i++) {
  			markers[i].setVisible(true);
  		}
  		map.fitBounds(bounds);
@@ -400,6 +406,17 @@ function viewModel() {
 	};
 
 }
+
+function showHideMarkersByLine(selectedLine) {
+	for (var i = 0; i < markers.length; i++) {
+		if (markers[i].line == selectedLine || selectedLine === undefined) {
+			markers[i].setVisible(true);
+		} else {
+			markers[i].setVisible(false);
+		};
+	};
+}
+
 
 function getNews(nytKeyWords) {
 	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -412,7 +429,6 @@ function getNews(nytKeyWords) {
 		url: url,
 		method: 'GET',
 	}).done(function(result) {
-		console.log(result);
 		articles = result.response.docs;
 		$('#nytimes-articles').html("");
 		for (var i = 0; i < articles.length; i++) {
@@ -427,8 +443,6 @@ function getNews(nytKeyWords) {
 	});
 }
 
-// create a blank list to take in all the to-be-displayed markers
-var markers = [];
 
 // initiate a Google Map Layout
 function initMap() {
@@ -463,6 +477,7 @@ function initMap() {
  			position: position,
  			animation: google.maps.Animation.DROP,
  			title: allTrainStations[i].name,
+ 			line: allTrainStations[i].line,
  			map: map
  		});
 
