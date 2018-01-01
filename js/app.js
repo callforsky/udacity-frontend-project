@@ -396,6 +396,7 @@ function viewModel() {
  		if (largeInfowindow) {
 			largeInfowindow.close();
 		};
+		getNews('metro north railroad');
 	};
 
 }
@@ -465,6 +466,7 @@ function initMap() {
 	//   throw err;
 	// });
 
+	getNews('metro north railroad');
 
  	// Function to clear all markers, will be called in another function
  	function clearMarkers () {
