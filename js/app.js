@@ -343,6 +343,8 @@ var allTrainLines = [
 ];
 
 // ==== This is the octopus (view model) part ===
+
+
 // bind ViewModel to the View (html)
 ko.applyBindings(new viewModel());
 
@@ -365,29 +367,33 @@ function viewModel() {
 		} else {
 			selectedStations = allTrainStations;
 		}
-
-		// putMarkers(selectedStations);
-		// console.log(selectedStations)
 		return selectedStations;
 	});
 
 	self.oneStation = function (station) {
+		if (largeInfowindow) {
+			largeInfowindow.close();
+		};
 		for (var i = 0 ; i < markers.length; i ++) {
-			console.log(markers[i])
 			if (markers[i].getTitle() != station.name) {
 				markers[i].setVisible(false);
 			} else {
 				markers[i].setVisible(true);
+				map.panTo(markers[i].getPosition());
+				markers[i].setAnimation(google.maps.Animation.DROP);
 			}
-		}
-		console.log(station.name);
+		};
 	};
 
 	self.resetSelection = function () {
 		self.selectedLine(null);
-		 for (var i = 0 ; i < markers.length; i ++) {
+		for (var i = 0 ; i < markers.length; i ++) {
  			markers[i].setVisible(true);
  		}
+ 		map.fitBounds(bounds);
+ 		if (largeInfowindow) {
+			largeInfowindow.close();
+		};
 	};
 
 }
@@ -397,21 +403,16 @@ var markers = [];
 
 // initiate a Google Map Layout
 function initMap() {
-	var map = new google.maps.Map(document.getElementById('map'), {
+	window.map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 41.033329, lng: -73.7751039},
 		zoom: 11,
 		streetViewControl: false,
 	});
 
-	// add an event listener to prevent too-close-zoom when there's only one marker
-	google.maps.event.addListener(map, 'bounds_changed', function(event) {
-		if (this.getZoom() > 15) {
-			this.setZoom(15);
-		}
-	});
+
 
 	// create the info window object from google map api library
-	var largeInfowindow = new google.maps.InfoWindow();
+	window.largeInfowindow = new google.maps.InfoWindow();
 
 	// retrieve news from NYT about MTA and put them on the info bar at the right side
 	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -437,48 +438,27 @@ function initMap() {
 	  throw err;
 	});
 
-	// // take in the current selected train station list and label them on the map
-	// function putMarkers(dList) {
-	// 	// Clear all markers at first, we restart from no markers
-	// 	clearMarkers();
-	// 	// Loop over the selectedStations to put the markers on map
-	// 	for (var i = 0; i < dList.length; i++) {
-	// 		var position = dList[i].address;
-	//  		var marker = new google.maps.Marker({
-	//  			position: position,
-	//  			animation: google.maps.Animation.DROP,
-	//  			title: dList[i].name,
-	//  			map: map
-	//  		});
-	//  		// Push the marker to our array of markers
-	//  		markers.push(marker);
-	//  		// Create an on-click event to open an infowindow at each marker
-	//  		// and center to the marker
-	//  		marker.addListener('click', function() {
-	//  			populateInfoWindow(this, largeInfowindow);
-	//  		});
- // 		};
 
-	// 	// Fit the map to display all markers
- // 		var bounds = new google.maps.LatLngBounds();
- // 		for (var i = 0; i < markers.length; i++) {
- // 			bounds.extend(markers[i].getPosition());
- // 		}
- // 		map.fitBounds(bounds);
- // 	}
-
+ 	// Function to clear all markers, will be called in another function
+ 	function clearMarkers () {
+ 		for (var i = 0 ; i < markers.length; i ++) {
+ 			markers[i].setVisible(false);
+ 		}
+ 		markers = [];
+ 	}
  	// Clear all markers at first, we restart from no markers
  	clearMarkers();
  	// loop over all train stations to put the markers on map
  	// have another function to turn on/off the markers instead of recreating them repeatedly
  	for (var i = 0; i < allTrainStations.length; i++) {
  		var position = allTrainStations[i].address;
- 		var marker = new google.maps.Marker({
+ 		window.marker = new google.maps.Marker({
  			position: position,
  			animation: google.maps.Animation.DROP,
  			title: allTrainStations[i].name,
  			map: map
  		});
+
  		// Push the marker to our array of markers
  		markers.push(marker);
  		// console.log(markers[i].getTitle());
@@ -490,19 +470,11 @@ function initMap() {
  	}
 
 	// Fit the map to display all markers
-	var bounds = new google.maps.LatLngBounds();
+	window.bounds = new google.maps.LatLngBounds();
 	for (var i = 0; i < markers.length; i++) {
 		bounds.extend(markers[i].getPosition());
 	}
 	map.fitBounds(bounds);
-
- 	// Function to clear all markers, will be called in another function
- 	function clearMarkers () {
- 		for (var i = 0 ; i < markers.length; i ++) {
- 			markers[i].setVisible(false);
- 		}
- 		markers = [];
- 	}
 
  	// Function to populate the info window when a marker is clicked
  	// The infowindow has the title and street view
