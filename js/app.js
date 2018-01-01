@@ -367,6 +367,10 @@ function viewModel() {
 		if (self.selectedLine() == 'Harlem Line' || self.selectedLine() == 'Hudson Line') {
 			selectedStations = allTrainStations.filter(station => station.line[0] == self.selectedLine() || station.line[1] == self.selectedLine());
 			showHideMarkersByLine(self.selectedLine())
+			if (largeInfowindow) {
+				largeInfowindow.close();
+			};
+			map.fitBounds(bounds);
 		} else {
 			selectedStations = allTrainStations;
 			showHideMarkersByLine(self.selectedLine())
@@ -386,6 +390,7 @@ function viewModel() {
 				markers[i].setVisible(true);
 				map.panTo(markers[i].getPosition());
 				markers[i].setAnimation(google.maps.Animation.DROP);
+				google.maps.event.trigger(markers[i], 'click');
 			}
 		};
 		// get the NYT news for the selected station
@@ -423,12 +428,14 @@ function getNews(nytKeyWords) {
 	url += '?' + $.param({
 		'api-key': "7734f8ba387f4a81abb8b82ff661e32a",
 		'sort': "newest",
-		'q': nytKeyWords
+		'q': nytKeyWords,
+		'fl': "headline,snippet,web_url,pub_date"
 	});
 	$.ajax({
 		url: url,
 		method: 'GET',
 	}).done(function(result) {
+		console.log(result);
 		articles = result.response.docs;
 		$('#nytimes-articles').html("");
 		for (var i = 0; i < articles.length; i++) {
@@ -509,6 +516,7 @@ function initMap() {
  		var infoContent = '<div><h6>' + marker.title + ' Train Station</h6></div>' +
 	 			'<div id="pano" style="width:300px;height:300px;"></div>';
 	 	if (infowindow.marker != marker) {
+	 		// clear the infowindow content to give the streetview time to load
 	 		infowindow.setContent('');
 	 		infowindow.marker = marker;
 	 		// Make sure the marker property is cleared if the infowwindow is closed
