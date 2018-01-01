@@ -446,13 +446,16 @@ function getNews(nytKeyWords) {
 		}
 	}).fail(function(err) {
 		$('#nytimes-articles').html("");
-		$('#nytimes-articles').text("NYT news could not be loaded, please try another station or retry later.");
+		$('#nytimes-articles').text("NYT news could not be loaded, please try another station or retry later. " +
+			"If still not resolved, please check your internet connection and API keys if you replaced the default API key with yorus.");
 	});
 }
 
 // Google Map API Error Handling
 function mapError() {
-	alert("Google Map could not be loaded at this moment. Please notify the developer through GitHub and he will fix it as soon as possible.")
+	alert("Google Map could not be loaded at this moment. Please check if you have a proper internet connection. " +
+		"Also, you may want to check your API keys if you replaced the default API key with yours. " +
+		"Otherwise, please notify the developer through GitHub and he will fix it as soon as possible.")
 }
 
 // initiate a Google Map Layout
