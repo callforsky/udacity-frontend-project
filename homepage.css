@@ -1,5 +1,6 @@
 .each_station {
 	list-style-type: none;
+	overflow-wrap: break-word;
 }
 
 #map {
