@@ -383,6 +383,8 @@ function viewModel() {
 				markers[i].setAnimation(google.maps.Animation.DROP);
 			}
 		};
+		var nytKeyWords = 'metro north train ' + station.name;
+		getNews(nytKeyWords);
 	};
 
 	self.resetSelection = function () {
@@ -396,6 +398,31 @@ function viewModel() {
 		};
 	};
 
+}
+
+function getNews(nytKeyWords) {
+	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+	url += '?' + $.param({
+		'api-key': "7734f8ba387f4a81abb8b82ff661e32a",
+		'sort': "newest",
+		'q': nytKeyWords
+	});
+	$.ajax({
+		url: url,
+		method: 'GET',
+	}).done(function(result) {
+		console.log(result);
+		articles = result.response.docs;
+		$('#nytimes-articles').html("");
+		for (var i = 0; i < articles.length; i++) {
+			var article = articles[i];
+			$('#nytimes-articles').append('<li class="article">'+'<a class="news-title" href="'+article.web_url+'">'+article.headline.main+'</a>'+
+	  			'<p class="news-date">Published Date: '+article.pub_date.substring(0,10)+'</p>'+
+				'<p class="news-brief">'+article.snippet+'</p>'+'</li>');
+		}
+	}).fail(function(err) {
+		throw err;
+	});
 }
 
 // create a blank list to take in all the to-be-displayed markers
@@ -415,28 +442,28 @@ function initMap() {
 	window.largeInfowindow = new google.maps.InfoWindow();
 
 	// retrieve news from NYT about MTA and put them on the info bar at the right side
-	var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-	url += '?' + $.param({
-	  'api-key': "7734f8ba387f4a81abb8b82ff661e32a",
-	  'sort': "newest",
-	  'q': "metro-north-railroad"
-	});
-	$.ajax({
-	  url: url,
-	  method: 'GET',
-	}).done(function(result) {
-	  console.log(result);
-	  articles = result.response.docs;
-	  console.log(articles);
-	  for (var i = 0; i < articles.length; i++) {
-	  	var article = articles[i];
-	  	$('#nytimes-articles').append('<li class="article">'+'<a class="news-title" href="'+article.web_url+'">'+article.headline.main+'</a>'+
-	  			'<p class="news-date">Published Date: '+article.pub_date.substring(0,10)+'</p>'+
-				'<p class="news-brief">'+article.snippet+'</p>'+'</li>');
-	  }
-	}).fail(function(err) {
-	  throw err;
-	});
+	// var url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+	// url += '?' + $.param({
+	//   'api-key': "7734f8ba387f4a81abb8b82ff661e32a",
+	//   'sort': "newest",
+	//   'q': "metro-north-railroad"
+	// });
+	// $.ajax({
+	//   url: url,
+	//   method: 'GET',
+	// }).done(function(result) {
+	//   console.log(result);
+	//   articles = result.response.docs;
+	//   console.log(articles);
+	//   for (var i = 0; i < articles.length; i++) {
+	//   	var article = articles[i];
+	//   	$('#nytimes-articles').append('<li class="article">'+'<a class="news-title" href="'+article.web_url+'">'+article.headline.main+'</a>'+
+	//   			'<p class="news-date">Published Date: '+article.pub_date.substring(0,10)+'</p>'+
+	// 			'<p class="news-brief">'+article.snippet+'</p>'+'</li>');
+	//   }
+	// }).fail(function(err) {
+	//   throw err;
+	// });
 
 
  	// Function to clear all markers, will be called in another function
