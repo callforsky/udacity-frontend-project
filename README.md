@@ -11,7 +11,7 @@ This webpage uses **Bootstrap** to construct a responsive and mobile-friendly fr
 
 ## How to Use
 
-This mini application has a simple structure and does not require a virtual machine or package manager to work. All required frameworks/packages are included in the js folder. However, I recommend the user to get his or her own Google Maps API and NYT API and replace the existing API keys in homepage.html (Google Maps API) and app.js (NYT API).
+This mini application has a simple structure and requires only a valid internet connection to work because it gets information from Google Maps API and NYT API. All required frameworks/packages are included in the js folder. However, I recommend the user to get his or her own Google Maps API and NYT API and replace the existing API keys in homepage.html (Google Maps API) and app.js (NYT API).
 
 #### Option #1
 1. Clone this reponsitory
