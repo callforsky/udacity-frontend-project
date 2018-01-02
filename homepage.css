@@ -57,10 +57,6 @@ h2.big_title {
 	margin-left: 0em;
 }
 
-.article {
-	list-style-type: none;
-}
-
 .article-list {
 	padding-left: 0.1em;
 }
@@ -85,5 +81,6 @@ h2.big_title {
 }
 
 .news-divider {
-	margin: 0.1em;
+	margin-top: 0.1em;
+	margin-bottom: 0.4em;
 }
