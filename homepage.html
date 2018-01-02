@@ -14,30 +14,30 @@
 
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-2 side-bar">
-          <div class="row">
+    <article class="container-fluid">
+      <section class="row">
+        <aside class="col-sm-2 side-bar">
+          <header class="row">
             <h2 class="big_title">MTA Train Stations</h2>
-          </div>
-          <div class="row">
+          </header>
+          <section class="row">
             <!-- MTA Line Filter -->
             <select class="dropdown_list" data-bind="options: trainLines,
                                value: selectedLine,
                                optionsCaption: 'Filter by Line...'"></select>
             <!-- The line below immediately is used to test if the knockout select list works -->
             <!-- <span data-bind="text: selectedLine"></span> -->
-            <div class="divider"></div>
+            <section class="divider"></section>
             <button class="reset_button" data-bind="click: resetSelection">Reset</button>
-          </div>
-          <div class="row">
+          </section>
+          <nav class="row">
             <ul class="station_list" data-bind="foreach: trainStationList()">
               <li class="each_station" data-bind="text: name, click : $root.oneStation.bind($root)"></li>
             </ul>
-          </div>
-        </div>
-        <div class="col-sm-8" id="map"></div>
-        <div class="col-sm-2 side-bar">
+          </nav>
+        </aside>
+        <main class="col-sm-8" id="map"></main>
+        <aside class="col-sm-2 side-bar">
           <h4 class="news_title">Station News from NYT</h4>
           <hr class="news-divider" size="10" color="white">
           <ul id="nytimes-articles" class="article-list" data-bind="foreach: newsArray()">
@@ -45,9 +45,9 @@
             <p class="news-date" data-bind="text: 'Published date: ' + pub_date.substring(0,10)"></p>
             <p class="news-brief" data-bind="text: snippet"></p>
           </ul>
-        </div>
-      </div>
-    </div>
+        </aside>
+      </section>
+    </article>
 
     <!-- JavaScript -->
     <!-- Link to Knockout JS -->
