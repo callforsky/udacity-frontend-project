@@ -41,14 +41,22 @@ function ViewModel() {
 		};
 		// hide all other markers to focus on the selected station
 		for (var i = 0; i < markers.length; i++) {
-			if (markers[i].getTitle() != station.name) {
-				markers[i].setVisible(false);
-			} else {
-				markers[i].setVisible(true);
+			// if (markers[i].getTitle() != station.name) {
+			// 	markers[i].setVisible(false);
+			// } else {
+			// 	markers[i].setVisible(true);
+			// 	map.panTo(markers[i].getPosition());
+			// 	markers[i].setAnimation(google.maps.Animation.DROP);
+			// 	google.maps.event.trigger(markers[i], 'click');
+			// }
+			if (markers[i].getTitle() == station.name) {
 				map.panTo(markers[i].getPosition());
 				markers[i].setAnimation(google.maps.Animation.DROP);
 				google.maps.event.trigger(markers[i], 'click');
-			}
+			} else {
+				// restore to the default marker icon
+				markers[i].setIcon();
+			};
 		};
 		// get the NYT news for the selected station
 		var nytKeyWords = 'metro north train ' + station.name;
@@ -160,7 +168,10 @@ function initMap() {
  		// Create an on-click event to open an infowindow at each marker
 	 	// and center to the marker
  		marker.addListener('click', function(){
+ 			this.setAnimation(google.maps.Animation.DROP);
+ 			this.setIcon('https://www.google.com/mapfiles/marker_green.png');
  			populateInfoWindow(this, largeInfowindow);
+ 			getNews('metro north train ' + this.title);
  		});
  	}
 
@@ -184,6 +195,7 @@ function initMap() {
 	 		// Make sure the marker property is cleared if the infowwindow is closed
 	 		infowindow.addListener('closeclick', function() {
 	 			infowindow.marker = null;
+	 			marker.setIcon();
 	 			map.setZoom(10);
 	 		});
 
